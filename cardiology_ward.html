@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кардиологическое отделение</title>
+<style>
+  /* ===== Современный дизайн с системными переменными ===== */
+  :root {
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --border: #e5e7eb;
+    --border-light: #f1f5f9;
+    --text: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+    --primary: #dc2626;
+    --primary-dark: #b91c1c;
+    --primary-light: #fef2f2;
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --info: #3b82f6;
+    --info-light: #eff6ff;
+    --purple: #8b5cf6;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.10);
+    --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.14);
+    --radius: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 110px;
+    min-height: 100vh;
+    line-height: 1.5;
+    font-size: 17px;
+  }
+
+  /* ===== Шапка ===== */
+  header {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+    color: white;
+    padding: 22px 18px 18px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 6px 24px rgba(220, 38, 38, 0.28);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 160px;
+    height: 160px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'white\' opacity=\'0.08\'><path d=\'M50 88 L20 55 C10 42 18 25 32 25 C40 25 46 30 50 38 C54 30 60 25 68 25 C82 25 90 42 80 55 Z\'/></svg>");
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  header .heart-icon {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.15); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.15); }
+    70% { transform: scale(1); }
+  }
+  header .subtitle {
+    font-size: 14px;
+    opacity: 0.92;
+    margin-top: 5px;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+  }
+  header #dateInfo {
+    font-size: 13px !important;
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Верхняя статистика ===== */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 14px 12px;
+    background: transparent;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 12px 6px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  /* ===== Вкладки ===== */
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    padding: 6px;
+    margin: 0 12px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    gap: 4px;
+  }
+  .tab {
+    padding: 11px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 0.2s;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .tab.active {
+    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  }
+
+  .content { padding: 14px 12px; }
+  .view { display: none; }
+  .view.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Легенда ===== */
+  .legend {
+    display: flex;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface);
+    margin: 0 12px 12px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    justify-content: center;
+    font-weight: 500;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ===== Палаты ===== */
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .room-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--border-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .room-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--success);
+  }
+  .room-card.full::before { background: var(--primary); }
+  .room-card.partial::before { background: var(--warning); }
+  .room-card.full { border-color: rgba(220, 38, 38, 0.15); }
+  .room-card.partial { border-color: rgba(245, 158, 11, 0.15); }
+  .room-card.empty { border-color: rgba(16, 185, 129, 0.15); }
+
+  .room-number {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text);
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .room-status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
+  }
+  .bed {
+    background: var(--surface-alt);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    min-height: 56px;
+    transition: all 0.2s;
+    border: 1px solid var(--border-light);
+  }
+  .bed.occupied {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    color: #7f1d1d;
+    border-color: rgba(220, 38, 38, 0.2);
+  }
+
+  .bed.free {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    color: #065f46;
+    text-align: center;
+    line-height: 38px;
+    border-color: rgba(16, 185, 129, 0.2);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .bed-patient-name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .bed-info {
+    font-size: 12px;
+    margin-top: 3px;
+    opacity: 0.9;
+    font-style: italic;
+  }
+
+  .days-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 700;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+
+  /* ===== Список пациентов ===== */
+  .patient-list {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .patient-item {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s;
+  }
+  .patient-item:last-child { border-bottom: none; }
+  .patient-item:active { background: var(--surface-alt); }
+  .patient-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .patient-details {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+  .patient-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .btn-small {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .btn-discharge {
+    background: var(--success);
+    color: white;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+  }
+  .btn-edit {
+    background: var(--info);
+    color: white;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  }
+  .btn-delete {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+  }
+
+  /* ===== Статистика ===== */
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card h3 {
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .stat-big {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: "Times New Roman", Times, serif;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row strong {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  /* ===== Кнопка добавления ===== */
+  .fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    font-size: 32px;
+    border: none;
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45);
+    cursor: pointer;
+    z-index: 50;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .fab:active { transform: scale(0.95); }
+  .fab::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 0; }
+  }
+
+  /* ===== Модальные окна ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: flex-end;
+    z-index: 200;
+    animation: overlayIn 0.25s;
+  }
+  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface);
+    width: 100%;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: 22px 18px 28px;
+    max-height: 92vh;
+    overflow-y: auto;
+    animation: modalUp 0.3s ease-out;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.18);
+  }
+  @keyframes modalUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: -8px auto 16px;
+  }
+  .modal h2 {
+    font-size: 22px;
+    margin-bottom: 18px;
+    color: var(--text);
+    font-weight: 700;
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: var(--text);
+    font-family: "Times New Roman", Times, serif;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    font-size: 16px;
+    background: var(--surface);
+    font-family: "Times New Roman", Times, Georgia, serif;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.1s, box-shadow 0.2s;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+  }
+  .btn-secondary {
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text-tertiary);
+    font-size: 15px;
+  }
+
+
+  .export-btn {
+    background: var(--info);
+    color: white;
+    padding: 13px;
+    border: none;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: var(--shadow);
+    font-family: "Times New Roman", Times, serif;
+  }
+  .export-btn:active { transform: scale(0.98); }
+
+  /* ===== Календарь ===== */
+  .calendar { width: 100%; }
+  .cal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+  .cal-nav {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+    font-family: "Times New Roman", Times, serif;
+  }
+  .cal-month {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    font-family: "Times New Roman", Times, serif;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-weekday {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    padding: 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    background: var(--surface-alt);
+    border-radius: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    position: relative;
+    padding: 3px;
+    border: 1px solid transparent;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .cal-day.empty { background: transparent; }
+  .cal-day.today {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+  }
+  .cal-day.has-events {
+    border-color: var(--info);
+    background: var(--info-light);
+  }
+  .cal-day .cal-num { font-weight: 700; }
+  .cal-day .cal-events {
+    font-size: 10px;
+    color: var(--primary);
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .cal-day.today .cal-events { color: #fff; }
+
+  /* ===== Бронь ===== */
+  .bed-booking {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    color: #78350f;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-top: 6px;
+    border: 1.5px dashed var(--warning);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .bed.occupied .bed-booking { background: rgba(255,255,255,0.85); }
+  .booking-badge {
+    background: var(--warning);
+    color: white;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 4px;
+    font-weight: 700;
+  }
+  .booking-item {
+    padding: 14px;
+    border-left: 5px solid var(--warning);
+    background: var(--surface);
+    margin-bottom: 10px;
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+  }
+  .booking-info {
+    font-size: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .booking-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .booking-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="heart-icon">❤️</span> Кардиологическое отделение</h1>
+  <div class="subtitle">Палаты 201–225 · 50 коек</div>
+  <div id="dateInfo"></div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-value" id="totalOccupied">0</div>
+    <div class="stat-label">Занято</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="totalFree">50</div>
+    <div class="stat-label">Свободно</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="totalBookings">0</div>
+    <div class="stat-label">Брони</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="dischargeToday">0</div>
+    <div class="stat-label">Выписка сегодня</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-view="rooms">Палаты</div>
+  <div class="tab" data-view="patients">Пациенты</div>
+  <div class="tab" data-view="bookings">Бронь</div>
+  <div class="tab" data-view="stats">Статистика</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#38a169"></span>Свободно</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#d69e2e"></span>Частично</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#c53030"></span>Занято</div>
+</div>
+
+<div class="content">
+  <div class="view active" id="view-rooms">
+    <div class="rooms-grid" id="roomsGrid"></div>
+  </div>
+
+  <div class="view" id="view-patients">
+    <div class="patient-list" id="patientList"></div>
+  </div>
+
+  <div class="view" id="view-bookings">
+    <div style="background: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      <div style="font-size: 13px; color: #4a5568; margin-bottom: 10px;">
+        Бронирование койки на будущую дату. Когда наступит дата — койка должна быть свободна, иначе будет конфликт.
+      </div>
+      <button class="btn btn-primary" onclick="openAddBooking()">+ Новая бронь</button>
+    </div>
+    <div id="bookingList"></div>
+  </div>
+
+  <div class="view" id="view-stats">
+    <div class="stat-card">
+      <h3>Календарь</h3>
+      <div class="calendar">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+          <div class="cal-month" id="calMonth"></div>
+          <button class="cal-nav" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div style="margin-top: 10px; font-size: 11px; color: #4a5568;">
+          Поступления / выписки в день
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <h3>За текущий месяц</h3>
+      <div class="stat-row"><span>Всего поступлений:</span> <strong id="statAdmissions">0</strong></div>
+      <div class="stat-row"><span>Всего выписок:</span> <strong id="statDischarges">0</strong></div>
+      <div class="stat-row"><span>Сейчас на лечении:</span> <strong id="statCurrent">0</strong></div>
+      <div class="stat-row"><span>Средний срок лечения:</span> <strong id="statAvgDays">0 дн.</strong></div>
+      <div class="stat-row"><span>Загрузка отделения:</span> <strong id="statLoad">0%</strong></div>
+    </div>
+    <div class="stat-card">
+      <h3>По врачам (текущий месяц)</h3>
+      <div id="doctorStats"></div>
+    </div>
+    <button class="export-btn" onclick="exportData()">Экспорт данных (CSV)</button>
+    <button class="export-btn" style="background:#38a169" onclick="document.getElementById('importFile').click()">Импорт из CSV (восстановление)</button>
+    <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importData(event)">
+    <button class="export-btn" style="background:#805ad5" onclick="backupToJson()">Резервная копия (JSON)</button>
+    <button class="export-btn" style="background:#dd6b20" onclick="document.getElementById('restoreFile').click()">Восстановить из копии (JSON)</button>
+    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreFromJson(event)">
+    <button class="export-btn" style="background:#e53e3e" onclick="resetData()">Сбросить все данные</button>
+  </div>
+</div>
+
+<button class="fab" onclick="openAddPatient()" title="Добавить пациента">+</button>
+
+<!-- Модальное окно добавления пациента -->
+<div class="modal-overlay" id="modalAdd">
+  <div class="modal">
+    <h2 id="modalTitle">Поступление пациента</h2>
+    <input type="hidden" id="editPatientId">
+    <div class="form-group">
+      <label>ФИО пациента *</label>
+      <input type="text" id="patientName" placeholder="Иванов Иван Иванович">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Палата *</label>
+        <select id="patientRoom"></select>
+      </div>
+      <div class="form-group">
+        <label>Койка *</label>
+        <select id="patientBed">
+          <option value="1">Койка 1</option>
+          <option value="2">Койка 2</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Дата поступления *</label>
+        <input type="date" id="patientAdmission">
+      </div>
+      <div class="form-group">
+        <label>План. дата выписки</label>
+        <input type="date" id="patientDischarge">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Лечащий врач *</label>
+      <select id="patientDoctor">
+        <option value="">— Выберите врача —</option>
+        <option value="Нодира">Нодира</option>
+        <option value="Иманкулова Д.">Иманкулова Д.</option>
+        <option value="Хикматилла">Хикматилла</option>
+        <option value="Дилшод">Дилшод</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Диагноз / Примечание</label>
+      <textarea id="patientNote" rows="2" placeholder="Необязательно"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="savePatient()">Сохранить</button>
+    <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
+  </div>
+</div>
+
+<!-- Модальное окно бронирования койки -->
+<div class="modal-overlay" id="modalBooking">
+  <div class="modal">
+    <h2 id="bookingModalTitle">Бронь койки</h2>
+    <input type="hidden" id="editBookingId">
+    <div class="form-group">
+      <label>ФИО пациента *</label>
+      <input type="text" id="bookingName" placeholder="Иванов Иван Иванович">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Палата *</label>
+        <select id="bookingRoom"></select>
+      </div>
+      <div class="form-group">
+        <label>Койка *</label>
+        <select id="bookingBed">
+          <option value="1">Койка 1</option>
+          <option value="2">Койка 2</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Дата поступления *</label>
+      <input type="date" id="bookingDate">
+    </div>
+    <div class="form-group">
+      <label>Лечащий врач</label>
+      <select id="bookingDoctor">
+        <option value="">— Не указан —</option>
+        <option value="Нодира">Нодира</option>
+        <option value="Иманкулова Д.">Иманкулова Д.</option>
+        <option value="Хикматилла">Хикматилла</option>
+        <option value="Дилшод">Дилшод</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Телефон / Примечание</label>
+      <input type="text" id="bookingNote" placeholder="Необязательно">
+    </div>
+    <button class="btn btn-primary" onclick="saveBooking()">Сохранить бронь</button>
+    <button class="btn btn-secondary" onclick="closeBookingModal()">Отмена</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'cardiology_data_v3';
+const ROOM_START = 201;
+const ROOM_END = 225;
+const ROOMS_COUNT = ROOM_END - ROOM_START + 1;
+const BEDS_PER_ROOM = 2;
+const DOCTORS = ['Нодира', 'Иманкулова Д.', 'Хикматилла', 'Дилшод'];
+
+let data = loadData();
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (!parsed.bookings) parsed.bookings = [];
+      return parsed;
+    }
+    // Миграция со старой версии
+    const old = localStorage.getItem('cardiology_data_v2');
+    if (old) {
+      const parsed = JSON.parse(old);
+      parsed.bookings = [];
+      return parsed;
+    }
+  } catch(e) {}
+  return { patients: [], archive: [], bookings: [], nextId: 1 };
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.toISOString().split('T')[0];
+}
+
+function daysBetween(start, end) {
+  const s = new Date(start);
+  const e = end ? new Date(end) : new Date();
+  return Math.max(0, Math.floor((e - s) / (1000*60*60*24)));
+}
+
+function getBedOccupant(room, bed) {
+  return data.patients.find(p => p.room === room && p.bed === bed && !p.dischargedAt);
+}
+
+let calMonthOffset = 0;
+
+function changeMonth(delta) {
+  calMonthOffset += delta;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const now = new Date();
+  const shown = new Date(now.getFullYear(), now.getMonth() + calMonthOffset, 1);
+  const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  document.getElementById('calMonth').textContent = `${months[shown.getMonth()]} ${shown.getFullYear()}`;
+
+  const firstDay = new Date(shown.getFullYear(), shown.getMonth(), 1);
+  const lastDay = new Date(shown.getFullYear(), shown.getMonth() + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  let startWeekday = firstDay.getDay() - 1;
+  if (startWeekday < 0) startWeekday = 6;
+
+  const todayStrVal = todayStr();
+  const allPatients = [...data.patients, ...data.archive];
+
+  const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  let html = weekdays.map(w => `<div class="cal-weekday">${w}</div>`).join('');
+
+  for (let i = 0; i < startWeekday; i++) {
+    html += '<div class="cal-day empty"></div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${shown.getFullYear()}-${String(shown.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const admissions = allPatients.filter(p => p.admissionDate === dateStr).length;
+    const discharges = allPatients.filter(p => p.dischargedAt === dateStr).length;
+    const isToday = dateStr === todayStrVal;
+    const hasEvents = admissions > 0 || discharges > 0;
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (hasEvents && !isToday) cls += ' has-events';
+    let evtText = '';
+    if (admissions) evtText += `+${admissions}`;
+    if (discharges) evtText += ` −${discharges}`;
+    html += `<div class="${cls}"><div class="cal-num">${d}</div>${evtText ? `<div class="cal-events">${evtText}</div>` : ''}</div>`;
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function updateDateInfo() {
+  const d = new Date();
+  const weekdays = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const weekNum = getWeekNumber(d);
+  document.getElementById('dateInfo').innerHTML =
+    `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} г. · ${weekdays[d.getDay()]} · Неделя ${weekNum}`;
+}
+
+function getWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1)/7);
+}
+
+function renderRooms() {
+  const grid = document.getElementById('roomsGrid');
+  grid.innerHTML = '';
+  for (let r = ROOM_START; r <= ROOM_END; r++) {
+    const b1 = getBedOccupant(r, 1);
+    const b2 = getBedOccupant(r, 2);
+    const occupied = (b1 ? 1 : 0) + (b2 ? 1 : 0);
+    let cls = 'empty', dotColor = '#38a169';
+    if (occupied === 2) { cls = 'full'; dotColor = '#c53030'; }
+    else if (occupied === 1) { cls = 'partial'; dotColor = '#d69e2e'; }
+
+    const card = document.createElement('div');
+    card.className = 'room-card ' + cls;
+    card.innerHTML = `
+      <div class="room-number">
+        Палата ${r}
+        <span class="room-status-dot" style="background:${dotColor}"></span>
+      </div>
+      ${renderBed(r, 1, b1)}
+      ${renderBed(r, 2, b2)}
+    `;
+    grid.appendChild(card);
+  }
+  updateStats();
+}
+
+function renderBed(room, bedNum, patient) {
+  const bookings = data.bookings
+    .filter(b => b.room === room && b.bed === bedNum)
+    .sort((a,b) => a.date.localeCompare(b.date));
+  const bookingHtml = bookings.map(b =>
+    `<div class="bed-booking" onclick="event.stopPropagation(); editBooking(${b.id})">${b.name} · ${formatDate(b.date)}</div>`
+  ).join('');
+
+  if (!patient) {
+    return `<div class="bed free" onclick="quickAdd(${room}, ${bedNum})">
+      + Койка ${bedNum} свободна
+    </div>${bookingHtml}`;
+  }
+  const days = daysBetween(patient.admissionDate);
+  return `<div class="bed occupied" onclick="editPatient(${patient.id})">
+    <div class="bed-patient-name">К${bedNum}: ${patient.name}</div>
+    <div class="bed-info">${patient.doctor || 'врач не указан'}</div>
+    <span class="days-badge">${days} дн.</span>
+  </div>${bookingHtml}`;
+}
+
+function renderPatients() {
+  const list = document.getElementById('patientList');
+  const active = data.patients.filter(p => !p.dischargedAt);
+  if (active.length === 0) {
+    list.innerHTML = '<div class="empty-state">Нет активных пациентов</div>';
+    return;
+  }
+  list.innerHTML = '';
+  active.sort((a,b) => a.room - b.room || a.bed - b.bed);
+  active.forEach(p => {
+    const days = daysBetween(p.admissionDate);
+    const item = document.createElement('div');
+    item.className = 'patient-item';
+    item.innerHTML = `
+      <div style="flex:1; min-width: 0;">
+        <div class="patient-name">${p.name}</div>
+        <div class="patient-details">
+          Палата ${p.room}, койка ${p.bed} · ${days} дн.<br>
+          ${p.doctor ? p.doctor + ' · ' : ''}поступил ${formatDate(p.admissionDate)}
+          ${p.plannedDischarge ? ' · план: ' + formatDate(p.plannedDischarge) : ''}
+        </div>
+      </div>
+      <div class="patient-actions">
+        <button class="btn-small btn-edit" onclick="editPatient(${p.id})">✏️</button>
+        <button class="btn-small btn-discharge" onclick="dischargePatient(${p.id})">Выписать</button>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  return d.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'});
+}
+
+function updateStats() {
+  const active = data.patients.filter(p => !p.dischargedAt);
+  document.getElementById('totalOccupied').textContent = active.length;
+  document.getElementById('totalFree').textContent = (ROOMS_COUNT * BEDS_PER_ROOM) - active.length;
+  document.getElementById('totalBookings').textContent = data.bookings.length;
+
+  const today = todayStr();
+  const dischargeToday = active.filter(p => p.plannedDischarge === today).length;
+  document.getElementById('dischargeToday').textContent = dischargeToday;
+}
+
+function renderStats() {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+
+  const allThisMonth = [
+    ...data.patients,
+    ...data.archive
+  ].filter(p => p.admissionDate >= monthStart || (p.dischargedAt && p.dischargedAt >= monthStart));
+
+  const admissions = allThisMonth.filter(p => p.admissionDate >= monthStart).length;
+  const discharges = [...data.patients, ...data.archive].filter(p => p.dischargedAt && p.dischargedAt >= monthStart).length;
+  const current = data.patients.filter(p => !p.dischargedAt).length;
+
+  const completedThisMonth = [...data.patients, ...data.archive].filter(p => p.dischargedAt && p.dischargedAt >= monthStart);
+  const totalDays = completedThisMonth.reduce((sum, p) => sum + daysBetween(p.admissionDate, p.dischargedAt), 0);
+  const avgDays = completedThisMonth.length ? (totalDays / completedThisMonth.length).toFixed(1) : 0;
+
+  const load = Math.round((current / (ROOMS_COUNT * BEDS_PER_ROOM)) * 100);
+
+  document.getElementById('statAdmissions').textContent = admissions;
+  document.getElementById('statDischarges').textContent = discharges;
+  document.getElementById('statCurrent').textContent = current;
+  document.getElementById('statAvgDays').textContent = avgDays + ' дн.';
+  document.getElementById('statLoad').textContent = load + '%';
+
+  // Статистика по врачам
+  const doctorMap = {};
+  allThisMonth.forEach(p => {
+    const d = p.doctor || 'Не указан';
+    if (!doctorMap[d]) doctorMap[d] = { admissions: 0, discharges: 0 };
+    if (p.admissionDate >= monthStart) doctorMap[d].admissions++;
+    if (p.dischargedAt && p.dischargedAt >= monthStart) doctorMap[d].discharges++;
+  });
+  const docDiv = document.getElementById('doctorStats');
+  docDiv.innerHTML = Object.keys(doctorMap).length === 0
+    ? '<div style="color:#718096; font-size:13px;">Нет данных</div>'
+    : Object.entries(doctorMap).map(([name, s]) =>
+      `<div class="stat-row"><span>${name}</span><span>Поступ.: ${s.admissions} / Выписки: ${s.discharges}</span></div>`
+    ).join('');
+}
+
+function openAddPatient() {
+  document.getElementById('modalTitle').textContent = 'Поступление пациента';
+  document.getElementById('editPatientId').value = '';
+  document.getElementById('patientName').value = '';
+  document.getElementById('patientAdmission').value = todayStr();
+  document.getElementById('patientDischarge').value = '';
+  document.getElementById('patientDoctor').value = '';
+  document.getElementById('patientNote').value = '';
+  renderRoomOptions();
+  document.getElementById('modalAdd').classList.add('active');
+}
+
+function quickAdd(room, bed) {
+  openAddPatient();
+  document.getElementById('patientRoom').value = room;
+  document.getElementById('patientBed').value = bed;
+}
+
+function editPatient(id) {
+  const p = data.patients.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = 'Редактирование';
+  document.getElementById('editPatientId').value = id;
+  document.getElementById('patientName').value = p.name;
+  document.getElementById('patientAdmission').value = p.admissionDate;
+  document.getElementById('patientDischarge').value = p.plannedDischarge || '';
+  document.getElementById('patientDoctor').value = p.doctor || '';
+  document.getElementById('patientNote').value = p.note || '';
+  renderRoomOptions();
+  document.getElementById('patientRoom').value = p.room;
+  document.getElementById('patientBed').value = p.bed;
+  document.getElementById('modalAdd').classList.add('active');
+}
+
+function renderRoomOptions() {
+  const sel = document.getElementById('patientRoom');
+  sel.innerHTML = '';
+  for (let r = ROOM_START; r <= ROOM_END; r++) {
+    const opt = document.createElement('option');
+    opt.value = r;
+    opt.textContent = 'Палата ' + r;
+    sel.appendChild(opt);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalAdd').classList.remove('active');
+}
+
+function savePatient() {
+  const name = document.getElementById('patientName').value.trim();
+  const room = parseInt(document.getElementById('patientRoom').value);
+  const bed = parseInt(document.getElementById('patientBed').value);
+  const admission = document.getElementById('patientAdmission').value;
+  const editId = document.getElementById('editPatientId').value;
+
+  if (!name) { alert('Введите ФИО пациента'); return; }
+  if (!admission) { alert('Укажите дату поступления'); return; }
+  if (!document.getElementById('patientDoctor').value) { alert('Выберите лечащего врача'); return; }
+
+  // Проверка занятости койки
+  const occupant = getBedOccupant(room, bed);
+  if (occupant && (!editId || occupant.id !== parseInt(editId))) {
+    alert(`Койка ${bed} в палате ${room} уже занята: ${occupant.name}`);
+    return;
+  }
+
+  const patientData = {
+    name,
+    room,
+    bed,
+    admissionDate: admission,
+    plannedDischarge: document.getElementById('patientDischarge').value || null,
+    doctor: document.getElementById('patientDoctor').value,
+    note: document.getElementById('patientNote').value.trim()
+  };
+
+  if (editId) {
+    const idx = data.patients.findIndex(p => p.id === parseInt(editId));
+    if (idx >= 0) data.patients[idx] = { ...data.patients[idx], ...patientData };
+  } else {
+    data.patients.push({ id: data.nextId++, ...patientData, dischargedAt: null });
+  }
+
+  saveData();
+  closeModal();
+  renderAll();
+}
+
+function dischargePatient(id) {
+  const p = data.patients.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Выписать пациента: ${p.name}?`)) return;
+  p.dischargedAt = todayStr();
+  data.archive.push(p);
+  data.patients = data.patients.filter(x => x.id !== id);
+  saveData();
+  renderAll();
+
+  // Проверяем есть ли бронь на эту койку
+  const upcomingBooking = data.bookings.find(b => b.room === p.room && b.bed === p.bed);
+  if (upcomingBooking) {
+    setTimeout(() => {
+      alert(`💡 На эту койку есть бронь: ${upcomingBooking.name} (дата ${formatDate(upcomingBooking.date)}). Откройте вкладку «Бронь» чтобы принять пациента.`);
+    }, 200);
+  }
+}
+
+function backupToJson() {
+  try {
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cardiology_backup_${todayStr()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    alert('✓ Резервная копия сохранена.\nХраните этот файл в надёжном месте (например, в Google Drive или Telegram).');
+  } catch (err) {
+    alert('Ошибка: ' + err.message);
+  }
+}
+
+function restoreFromJson(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (!confirm('⚠️ Текущие данные будут заменены данными из файла. Продолжить?')) {
+    event.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.patients || !Array.isArray(parsed.patients)) {
+        throw new Error('Неверный формат файла');
+      }
+      if (!parsed.bookings) parsed.bookings = [];
+      if (!parsed.archive) parsed.archive = [];
+      if (!parsed.nextId) parsed.nextId = 1;
+      data = parsed;
+      saveData();
+      renderAll();
+      alert(`✓ Данные восстановлены.\nПациентов: ${data.patients.length}\nБроней: ${data.bookings.length}\nАрхив: ${data.archive.length}`);
+    } catch (err) {
+      alert('Ошибка восстановления: ' + err.message);
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const text = e.target.result.replace(/^\uFEFF/, '');
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) {
+        alert('Файл пуст или повреждён');
+        return;
+      }
+      if (!confirm(`Импортировать ${lines.length - 1} записей? Текущие данные будут заменены.`)) {
+        event.target.value = '';
+        return;
+      }
+      const parseRow = (line) => {
+        const result = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const c = line[i];
+          if (c === '"') {
+            if (inQuotes && line[i+1] === '"') { cur += '"'; i++; }
+            else inQuotes = !inQuotes;
+          } else if (c === ';' && !inQuotes) {
+            result.push(cur); cur = '';
+          } else cur += c;
+        }
+        result.push(cur);
+        return result;
+      };
+      const headers = parseRow(lines[0]);
+      const idx = (name) => headers.indexOf(name);
+
+      const newData = { patients: [], archive: [], bookings: [], nextId: 1 };
+      let maxId = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseRow(lines[i]);
+        const type = row[idx('Тип')] || 'Пациент';
+        const id = parseInt(row[idx('ID')]) || (maxId + 1);
+        maxId = Math.max(maxId, id);
+        const rec = {
+          id,
+          name: row[idx('ФИО')],
+          room: parseInt(row[idx('Палата')]),
+          bed: parseInt(row[idx('Койка')]),
+          doctor: row[idx('Врач')] || '',
+          note: row[idx('Примечание')] || ''
+        };
+        if (type === 'Бронь') {
+          rec.date = row[idx('Дата поступления')];
+          newData.bookings.push(rec);
+        } else {
+          rec.admissionDate = row[idx('Дата поступления')];
+          rec.plannedDischarge = row[idx('План. выписка')] || null;
+          rec.dischargedAt = row[idx('Дата выписки')] || null;
+          if (rec.dischargedAt) newData.archive.push(rec);
+          else newData.patients.push(rec);
+        }
+      }
+      newData.nextId = maxId + 1;
+      data = newData;
+      saveData();
+      renderAll();
+      alert(`✓ Импортировано:\nПациентов: ${data.patients.length}\nАрхив: ${data.archive.length}\nБроней: ${data.bookings.length}`);
+    } catch (err) {
+      alert('Ошибка импорта: ' + err.message);
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function exportData() {
+  try {
+    const all = [...data.patients, ...data.archive];
+    const bookings = data.bookings || [];
+
+    if (all.length === 0 && bookings.length === 0) {
+      alert('Нет данных для экспорта. Сначала добавьте пациента или бронь.');
+      return;
+    }
+
+    const headers = ['Тип','ID','ФИО','Палата','Койка','Дата поступления','План. выписка','Дата выписки','Дней','Врач','Примечание','Статус'];
+    const rows = [];
+
+    all.forEach(p => {
+      rows.push([
+        'Пациент',
+        p.id,
+        p.name,
+        p.room,
+        p.bed,
+        p.admissionDate || '',
+        p.plannedDischarge || '',
+        p.dischargedAt || '',
+        daysBetween(p.admissionDate, p.dischargedAt),
+        p.doctor || '',
+        (p.note || '').replace(/"/g,'""').replace(/[\r\n]+/g, ' '),
+        p.dischargedAt ? 'Выписан' : 'На лечении'
+      ]);
+    });
+
+    bookings.forEach(b => {
+      rows.push([
+        'Бронь',
+        b.id,
+        b.name,
+        b.room,
+        b.bed,
+        b.date || '',
+        '',
+        '',
+        '',
+        b.doctor || '',
+        (b.note || '').replace(/"/g,'""').replace(/[\r\n]+/g, ' '),
+        'Бронь'
+      ]);
+    });
+
+    const csv = [headers, ...rows]
+      .map(r => r.map(c => `"${String(c)}"`).join(';'))
+      .join('\r\n');
+
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cardiology_${todayStr()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    alert(`✓ Экспортировано записей: ${rows.length}\nФайл: cardiology_${todayStr()}.csv\n\nПроверьте папку «Загрузки»`);
+  } catch (err) {
+    alert('Ошибка экспорта: ' + err.message);
+    console.error(err);
+  }
+}
+
+function resetData() {
+  if (!confirm('Удалить ВСЕ данные? Это действие необратимо.')) return;
+  if (!confirm('Точно? Все пациенты, брони и архив будут удалены.')) return;
+  data = { patients: [], archive: [], bookings: [], nextId: 1 };
+  saveData();
+  renderAll();
+}
+
+function renderBookings() {
+  const list = document.getElementById('bookingList');
+  if (data.bookings.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="background: white; border-radius: 12px;">Нет активных броней</div>';
+    return;
+  }
+  const sorted = [...data.bookings].sort((a,b) => a.date.localeCompare(b.date));
+  const today = todayStr();
+  list.innerHTML = sorted.map(b => {
+    const occupant = getBedOccupant(b.room, b.bed);
+    const daysLeft = daysBetween(today, b.date);
+    let warning = '';
+    if (occupant && b.date <= today) {
+      warning = '<div style="color:#c53030; font-size:11px; margin-top:3px;">⚠️ Койка занята: ' + occupant.name + '</div>';
+    } else if (occupant) {
+      warning = '<div style="color:#d69e2e; font-size:11px; margin-top:3px;">ℹ️ Сейчас лежит: ' + occupant.name + '</div>';
+    }
+    return `<div class="booking-item">
+      <div class="booking-info">
+        <div class="booking-name">${b.name}</div>
+        <div class="booking-meta">
+          Палата ${b.room}, койка ${b.bed} · поступление ${formatDate(b.date)}${b.date >= today ? ' (через ' + daysLeft + ' дн.)' : ''}
+          ${b.doctor ? '<br>Врач: ' + b.doctor : ''}
+          ${b.note ? '<br>Примечание: ' + b.note : ''}
+        </div>
+        ${warning}
+      </div>
+      <div class="patient-actions">
+        <button class="btn-small btn-edit" onclick="editBooking(${b.id})">✏️</button>
+        <button class="btn-small btn-discharge" onclick="convertBookingToPatient(${b.id})">→ Принять</button>
+        <button class="btn-small btn-delete" onclick="deleteBooking(${b.id})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAddBooking() {
+  document.getElementById('bookingModalTitle').textContent = 'Новая бронь';
+  document.getElementById('editBookingId').value = '';
+  document.getElementById('bookingName').value = '';
+  document.getElementById('bookingDate').value = '';
+  document.getElementById('bookingDoctor').value = '';
+  document.getElementById('bookingNote').value = '';
+  renderBookingRoomOptions();
+  document.getElementById('modalBooking').classList.add('active');
+}
+
+function editBooking(id) {
+  const b = data.bookings.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('bookingModalTitle').textContent = 'Изменить бронь';
+  document.getElementById('editBookingId').value = id;
+  document.getElementById('bookingName').value = b.name;
+  document.getElementById('bookingDate').value = b.date;
+  document.getElementById('bookingDoctor').value = b.doctor || '';
+  document.getElementById('bookingNote').value = b.note || '';
+  renderBookingRoomOptions();
+  document.getElementById('bookingRoom').value = b.room;
+  document.getElementById('bookingBed').value = b.bed;
+  document.getElementById('modalBooking').classList.add('active');
+}
+
+function renderBookingRoomOptions() {
+  const sel = document.getElementById('bookingRoom');
+  sel.innerHTML = '';
+  for (let r = ROOM_START; r <= ROOM_END; r++) {
+    const opt = document.createElement('option');
+    opt.value = r;
+    opt.textContent = 'Палата ' + r;
+    sel.appendChild(opt);
+  }
+}
+
+function closeBookingModal() {
+  document.getElementById('modalBooking').classList.remove('active');
+}
+
+function saveBooking() {
+  const name = document.getElementById('bookingName').value.trim();
+  const room = parseInt(document.getElementById('bookingRoom').value);
+  const bed = parseInt(document.getElementById('bookingBed').value);
+  const date = document.getElementById('bookingDate').value;
+  const editId = document.getElementById('editBookingId').value;
+
+  if (!name) { alert('Введите ФИО пациента'); return; }
+  if (!date) { alert('Укажите дату поступления'); return; }
+
+  // Проверка пересечения с другими бронями на ту же койку и дату
+  const conflict = data.bookings.find(b =>
+    b.room === room && b.bed === bed && b.date === date &&
+    (!editId || b.id !== parseInt(editId))
+  );
+  if (conflict) {
+    alert(`На эту койку уже есть бронь на ${formatDate(date)}: ${conflict.name}`);
+    return;
+  }
+
+  const bookingData = {
+    name,
+    room,
+    bed,
+    date,
+    doctor: document.getElementById('bookingDoctor').value,
+    note: document.getElementById('bookingNote').value.trim()
+  };
+
+  if (editId) {
+    const idx = data.bookings.findIndex(b => b.id === parseInt(editId));
+    if (idx >= 0) data.bookings[idx] = { ...data.bookings[idx], ...bookingData };
+  } else {
+    data.bookings.push({ id: data.nextId++, ...bookingData });
+  }
+
+  saveData();
+  closeBookingModal();
+  renderAll();
+}
+
+function deleteBooking(id) {
+  const b = data.bookings.find(x => x.id === id);
+  if (!b) return;
+  if (!confirm(`Удалить бронь: ${b.name}?`)) return;
+  data.bookings = data.bookings.filter(x => x.id !== id);
+  saveData();
+  renderAll();
+}
+
+function convertBookingToPatient(id) {
+  const b = data.bookings.find(x => x.id === id);
+  if (!b) return;
+  const occupant = getBedOccupant(b.room, b.bed);
+  if (occupant) {
+    alert(`Койка ${b.bed} в палате ${b.room} занята: ${occupant.name}. Сначала выпишите пациента.`);
+    return;
+  }
+  if (!confirm(`Принять пациента ${b.name} в палату ${b.room}, койка ${b.bed}?`)) return;
+  data.patients.push({
+    id: data.nextId++,
+    name: b.name,
+    room: b.room,
+    bed: b.bed,
+    admissionDate: todayStr(),
+    plannedDischarge: null,
+    doctor: b.doctor || '',
+    note: b.note || '',
+    dischargedAt: null
+  });
+  data.bookings = data.bookings.filter(x => x.id !== id);
+  saveData();
+  renderAll();
+  alert('Пациент принят. Не забудьте уточнить плановую дату выписки.');
+}
+
+function renderAll() {
+  updateDateInfo();
+  renderRooms();
+  renderPatients();
+  renderBookings();
+  renderStats();
+  renderCalendar();
+}
+
+// Переключение вкладок
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+  });
+});
+
+// Закрытие модалки по клику на оверлей
+document.getElementById('modalAdd').addEventListener('click', (e) => {
+  if (e.target.id === 'modalAdd') closeModal();
+});
+document.getElementById('modalBooking').addEventListener('click', (e) => {
+  if (e.target.id === 'modalBooking') closeBookingModal();
+});
+
+renderAll();
+</script>
+
+</body>
+</html>
