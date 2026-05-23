@@ -6,6 +6,8 @@
   <title>Объединенная клиническая информационная система</title>
   <!-- Подключение Chart.js для сводной статистики клиники -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome для иконок обратной связи -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* ===== Базовые премиальные стили (Times New Roman) ===== */
     :root {
@@ -270,6 +272,43 @@
       color: white;
       border-color: transparent;
       box-shadow: 0 2px 12px rgba(13, 124, 140, 0.4);
+    }
+
+    /* ===== Языковой переключатель ===== */
+    .lang-switcher {
+      display: flex;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius);
+      padding: 2px;
+      gap: 2px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-left: 10px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: rgba(200, 225, 235, 0.85);
+      padding: 6px 12px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: calc(var(--radius) - 2px);
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .lang-btn.active {
+      background: var(--gradient-accent);
+      color: white;
+      box-shadow: 0 2px 8px rgba(13, 124, 140, 0.35);
     }
 
     /* ===== Контейнер контента ===== */
@@ -1317,6 +1356,359 @@
         justify-content: flex-end;
       }
     }
+
+    /* ===== Отзывы и Обратная связь (Компактный плавающий виджет) ===== */
+    .feedback-widget-container {
+      position: fixed;
+      bottom: 96px;
+      left: 26px;
+      z-index: 1000;
+      width: 350px;
+      max-width: calc(100vw - 52px);
+      background: var(--gradient-card);
+      border: 1px solid rgba(13, 124, 140, 0.15);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 10px 30px rgba(10, 37, 64, 0.25);
+      backdrop-filter: blur(12px);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: "Times New Roman", Times, Georgia, serif;
+      animation: widgetSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-top: 4px solid var(--primary);
+    }
+
+    .feedback-widget-container.active {
+      display: flex;
+    }
+
+    @keyframes widgetSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Плавающая круглая кнопка на левом краю */
+    .feedback-toggle-btn {
+      position: fixed;
+      bottom: 26px;
+      left: 26px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--gradient-card);
+      border: 1px solid rgba(13, 124, 140, 0.2);
+      color: var(--primary);
+      font-size: 24px;
+      box-shadow: 0 6px 20px rgba(10, 37, 64, 0.15);
+      cursor: pointer;
+      z-index: 999;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feedback-toggle-btn:hover {
+      transform: scale(1.08) rotate(5deg);
+      box-shadow: 0 8px 28px rgba(13, 124, 140, 0.3);
+      background: var(--primary);
+      color: white;
+    }
+
+    .feedback-toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .feedback-section {
+      padding: 18px;
+      position: relative;
+    }
+    
+    .feedback-header {
+      text-align: center;
+      margin-bottom: 12px;
+      padding: 0 20px;
+    }
+    
+    .feedback-header h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    
+    .feedback-header p {
+      color: var(--text-secondary);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+    
+    .feedback-category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .feedback-category-pill {
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .feedback-category-pill input {
+      display: none;
+    }
+    
+    .feedback-pill-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border-light);
+      padding: 6px 4px;
+      border-radius: var(--radius);
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    
+    .feedback-category-pill input:checked + .feedback-pill-content {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+    
+    .feedback-category-pill:hover .feedback-pill-content {
+      background: rgba(13, 124, 140, 0.05);
+      color: var(--text);
+    }
+    
+    .feedback-rating-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    
+    .feedback-star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 5px;
+    }
+    
+    .feedback-star-rating input {
+      display: none;
+    }
+    
+    .feedback-star-rating label {
+      font-size: 22px;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .feedback-star-rating label:hover,
+    .feedback-star-rating label:hover ~ label,
+    .feedback-star-rating input:checked ~ label {
+      color: var(--warning);
+      transform: scale(1.1);
+    }
+    
+    .feedback-rating-text {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: bold;
+      min-height: 16px;
+    }
+    
+    .feedback-settings-trigger {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    
+    .feedback-settings-trigger:hover {
+      background: var(--primary);
+      color: white;
+      border-color: transparent;
+    }
+
+    .feedback-close-trigger {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    
+    .feedback-close-trigger:hover {
+      background: #ef4444;
+      color: white;
+      border-color: transparent;
+    }
+
+    .feedback-success-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .feedback-success-icon {
+      font-size: 40px;
+      color: var(--success);
+      margin-bottom: 12px;
+    }
+
+    .feedback-success-screen h4 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .feedback-success-screen p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .feedback-section .form-group {
+      margin-bottom: 10px !important;
+    }
+    
+    .feedback-section .form-group label {
+      font-size: 12px !important;
+      margin-bottom: 4px !important;
+      display: block;
+    }
+    
+    .feedback-section input[type="text"],
+    .feedback-section textarea {
+      padding: 8px 10px !important;
+      font-size: 13px !important;
+      border-radius: var(--radius) !important;
+      border: 1px solid var(--border-light) !important;
+      background: var(--surface) !important;
+      color: var(--text) !important;
+    }
+    
+    .feedback-section .action-btn {
+      padding: 10px 15px !important;
+      font-size: 14px !important;
+    }
+    
+    .feedback-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+    }
+    
+    .feedback-toast.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .feedback-toast.success {
+      border-left: 4px solid var(--success);
+    }
+    
+    .feedback-toast.error {
+      border-left: 4px solid #ef4444;
+    }
+    
+    .feedback-success-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px 10px;
+      gap: 15px;
+    }
+    
+    .feedback-success-icon {
+      font-size: 54px;
+      color: var(--success);
+    }
+    
+    .feedback-success-screen h4 {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--text);
+    }
+    
+    .feedback-success-screen p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 400px;
+    }
+    
+    .feedback-warning-alert {
+      background: var(--warning-light);
+      border: 1px solid rgba(199, 139, 23, 0.2);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 13px;
+      color: var(--warning);
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -1326,8 +1718,8 @@
     <img src="medical_banner.png" alt="" class="header-banner">
     <div class="header-container">
       <div class="header-logo" onclick="navigateTo('#dashboard')">
-        <h1>Клинический Центр</h1>
-        <span>Объединенная многопрофильная система</span>
+        <h1 data-i18n="header-logo-title">Клинический Центр</h1>
+        <span data-i18n="header-logo-subtitle">Объединенная многопрофильная система</span>
       </div>
 
       <!-- Глобальный поиск пациентов -->
@@ -1335,15 +1727,22 @@
         <svg class="search-icon-svg" viewBox="0 0 24 24">
           <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
         </svg>
-        <input type="text" class="search-input" id="globalSearch" placeholder="Глобальный поиск пациентов..." oninput="performGlobalSearch()">
+        <input type="text" class="search-input" id="globalSearch" placeholder="Глобальный поиск пациентов..." oninput="performGlobalSearch()" data-i18n-placeholder="search-placeholder">
         <div class="search-results-dropdown" id="searchResults"></div>
       </div>
 
       <!-- Кнопки управления -->
-      <div class="header-nav">
-        <a href="#dashboard" class="nav-btn" id="nav-dashboard">Главная</a>
-        <a href="#stats" class="nav-btn" id="nav-stats">Сводка</a>
-        <a href="#admin" class="nav-btn" id="nav-admin">Админка</a>
+      <div class="header-nav" style="display: flex; align-items: center; gap: 10px;">
+        <a href="#dashboard" class="nav-btn" id="nav-dashboard" data-i18n="nav-dashboard">Главная</a>
+        <a href="#stats" class="nav-btn" id="nav-stats" data-i18n="nav-stats">Сводка</a>
+        <a href="#admin" class="nav-btn" id="nav-admin" data-i18n="nav-admin">Админка</a>
+        
+        <!-- Языковой переключатель -->
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="uz" onclick="changeLanguage('uz')">UZ</button>
+          <button class="lang-btn" data-lang="ru" onclick="changeLanguage('ru')">RU</button>
+          <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+        </div>
       </div>
     </div>
   </header>
@@ -1353,36 +1752,36 @@
     <!-- ================= 1. ГЛАВНЫЙ ДАШБОРД ================= -->
     <div class="view-section" id="view-dashboard">
       <div class="dashboard-header">
-        <h2 id="clinicTitle">Многопрофильный Медицинский Центр</h2>
-        <p>Оперативная сводка заполняемости отделений клиники в реальном времени</p>
+        <h2 id="clinicTitle" data-i18n="clinic_title">Многопрофильный Медицинский Центр</h2>
+        <p data-i18n="clinic_subtitle">Оперативная сводка заполняемости отделений клиники в реальном времени</p>
       </div>
 
       <!-- Сводные данные клиники -->
       <div class="global-stats-grid">
         <div class="global-stat-card" style="--primary: #0a2540">
           <div class="global-stat-value" id="globalTotalBeds">0</div>
-          <div class="global-stat-label">Всего коек</div>
+          <div class="global-stat-label" data-i18n="total_beds">Всего коек</div>
         </div>
         <div class="global-stat-card" style="--primary: #c0392b">
           <div class="global-stat-value" id="globalOccupiedBeds">0</div>
-          <div class="global-stat-label">Занято пациентов</div>
+          <div class="global-stat-label" data-i18n="occupied_beds">Занято пациентов</div>
         </div>
         <div class="global-stat-card" style="--primary: #0a8f6c">
           <div class="global-stat-value" id="globalFreeBeds">0</div>
-          <div class="global-stat-label">Свободно мест</div>
+          <div class="global-stat-label" data-i18n="free_beds">Свободно мест</div>
         </div>
         <div class="global-stat-card" style="--primary: #0d7c8c">
           <div class="global-stat-value" id="globalLoadPercent">0%</div>
-          <div class="global-stat-label">Загруженность</div>
+          <div class="global-stat-label" data-i18n="occupancy_rate">Загруженность</div>
         </div>
         <div class="global-stat-card" style="--primary: #c78b17">
           <div class="global-stat-value" id="globalBookings">0</div>
-          <div class="global-stat-label">Активных броней</div>
+          <div class="global-stat-label" data-i18n="active_bookings">Активных броней</div>
         </div>
       </div>
 
       <!-- Сетка отделений -->
-      <h3 style="margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Отделения клиники</h3>
+      <h3 style="margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid var(--border); padding-bottom: 8px;" data-i18n="clinic_departments">Отделения клиники</h3>
       <div class="depts-grid" id="deptsGrid"></div>
     </div>
 
@@ -1396,7 +1795,7 @@
           <p id="deptSubtitle">Палаты · Койки</p>
         </div>
         <div>
-          <button class="action-btn btn-gray" onclick="navigateTo('#dashboard')">← К списку отделений</button>
+          <button class="action-btn btn-gray" onclick="navigateTo('#dashboard')" data-i18n="back_to_depts">← К списку отделений</button>
         </div>
       </div>
 
@@ -1404,35 +1803,35 @@
       <div class="dept-stats-bar">
         <div class="dept-stat-item">
           <div class="dept-stat-value" id="deptOccupied">0</div>
-          <div class="dept-stat-label">Занято</div>
+          <div class="dept-stat-label" data-i18n="occupied">Занято</div>
         </div>
         <div class="dept-stat-item">
           <div class="dept-stat-value" id="deptFree">0</div>
-          <div class="dept-stat-label">Свободно</div>
+          <div class="dept-stat-label" data-i18n="free">Свободно</div>
         </div>
         <div class="dept-stat-item">
           <div class="dept-stat-value" id="deptBookingsCount">0</div>
-          <div class="dept-stat-label">Брони</div>
+          <div class="dept-stat-label" data-i18n="bookings_label">Брони</div>
         </div>
         <div class="dept-stat-item">
           <div class="dept-stat-value" id="deptDischargeToday">0</div>
-          <div class="dept-stat-label">Выписка сегодня</div>
+          <div class="dept-stat-label" data-i18n="discharges_today_label">Выписка сегодня</div>
         </div>
       </div>
 
       <!-- Вкладки отделения -->
       <div class="dept-tabs">
-        <div class="dept-tab active" id="tab-rooms" onclick="setDeptView('rooms')">Палаты</div>
-        <div class="dept-tab" id="tab-patients" onclick="setDeptView('patients')">Пациенты</div>
-        <div class="dept-tab" id="tab-bookings" onclick="setDeptView('bookings')">Бронь</div>
-        <div class="dept-tab" id="tab-stats" onclick="setDeptView('stats')">Статистика</div>
+        <div class="dept-tab active" id="tab-rooms" onclick="setDeptView('rooms')" data-i18n="wards">Палаты</div>
+        <div class="dept-tab" id="tab-patients" onclick="setDeptView('patients')" data-i18n="patients_tab">Пациенты</div>
+        <div class="dept-tab" id="tab-bookings" onclick="setDeptView('bookings')" data-i18n="bookings_tab">Бронь</div>
+        <div class="dept-tab" id="tab-stats" onclick="setDeptView('stats')" data-i18n="stats_tab">Статистика</div>
       </div>
 
       <!-- Легенда палаты -->
       <div class="legend" id="deptLegend">
-        <div class="legend-item"><span class="legend-dot" style="background:#059669"></span>Свободно</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Частично</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Занято</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#059669"></span><span data-i18n="free">Свободно</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span><span data-i18n="partially">Частично</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span><span data-i18n="occupied">Занято</span></div>
       </div>
 
       <!-- Вью палаты -->
@@ -1448,10 +1847,10 @@
       <!-- Вью бронирований -->
       <div class="dept-view" id="dept-view-bookings">
         <div style="background: white; padding: 15px; border-radius: var(--radius-lg); margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border);">
-          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;" data-i18n="booking_notice">
             Предварительное бронирование койки. При наступлении плановой даты койка автоматически помечается бронью.
           </div>
-          <button class="action-btn btn-blue" style="width: auto;" onclick="openAddBooking()">+ Новая бронь</button>
+          <button class="action-btn btn-blue" style="width: auto;" onclick="openAddBooking()" data-i18n="new_booking_btn">+ Новая бронь</button>
         </div>
         <div id="bookingList"></div>
       </div>
@@ -1459,7 +1858,7 @@
       <!-- Вью статистики отделения -->
       <div class="dept-view" id="dept-view-stats">
         <div class="stat-card">
-          <h3>Календарь госпитализаций</h3>
+          <h3 data-i18n="admissions_calendar">Календарь госпитализаций</h3>
           <div class="calendar">
             <div class="cal-header">
               <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
@@ -1467,32 +1866,32 @@
               <button class="cal-nav" onclick="changeMonth(1)">›</button>
             </div>
             <div class="cal-grid" id="calGrid"></div>
-            <div style="margin-top: 10px; font-size: 11px; color: var(--text-secondary);">
+            <div style="margin-top: 10px; font-size: 11px; color: var(--text-secondary);" data-i18n="calendar_legend">
               Поступления / выписки за день (отображаются в ячейках)
             </div>
           </div>
         </div>
 
         <div class="stat-card">
-          <h3>Показатели за текущий месяц</h3>
-          <div class="stat-row"><span>Всего поступлений:</span> <strong id="statAdmissions">0</strong></div>
-          <div class="stat-row"><span>Всего выписок:</span> <strong id="statDischarges">0</strong></div>
-          <div class="stat-row"><span>Сейчас на лечении:</span> <strong id="statCurrent">0</strong></div>
-          <div class="stat-row"><span>Средний срок лечения:</span> <strong id="statAvgDays">0 дн.</strong></div>
-          <div class="stat-row"><span>Загрузка отделения:</span> <strong id="statLoad">0%</strong></div>
+          <h3 data-i18n="monthly_indicators">Показатели за текущий месяц</h3>
+          <div class="stat-row"><span data-i18n="total_admissions">Всего поступлений:</span> <strong id="statAdmissions">0</strong></div>
+          <div class="stat-row"><span data-i18n="total_discharges">Всего выписок:</span> <strong id="statDischarges">0</strong></div>
+          <div class="stat-row"><span data-i18n="currently_treating">Сейчас на лечении:</span> <strong id="statCurrent">0</strong></div>
+          <div class="stat-row"><span data-i18n="avg_stay_duration">Средний срок лечения:</span> <strong id="statAvgDays">0 дн.</strong></div>
+          <div class="stat-row"><span data-i18n="dept_occupancy_load">Загрузка отделения:</span> <strong id="statLoad">0%</strong></div>
         </div>
 
         <div class="stat-card">
-          <h3>По лечащим врачам</h3>
+          <h3 data-i18n="by_attending_doctors">По лечащим врачам</h3>
           <div id="doctorStats"></div>
         </div>
 
         <!-- Кнопки управления данными для отделения -->
         <div class="stat-card">
-          <h3>Управление данными отделения</h3>
+          <h3 data-i18n="dept_data_management">Управление данными отделения</h3>
           <div class="export-grid">
-            <button class="action-btn btn-blue" onclick="exportDepartmentCSV()">Экспорт в CSV (таблица)</button>
-            <button class="action-btn btn-green" onclick="document.getElementById('importDeptFile').click()">Импорт из CSV</button>
+            <button class="action-btn btn-blue" onclick="exportDepartmentCSV()" data-i18n="export_csv_btn">Экспорт в CSV (таблица)</button>
+            <button class="action-btn btn-green" onclick="document.getElementById('importDeptFile').click()" data-i18n="import_csv_btn">Импорт из CSV</button>
             <input type="file" id="importDeptFile" accept=".csv" style="display:none" onchange="importDepartmentCSV(event)">
             <button class="action-btn btn-purple" onclick="exportDepartmentJSON()">Экспорт в JSON (копия)</button>
           </div>
@@ -1504,35 +1903,35 @@
     <!-- ================= 3. СВОДНАЯ СТАТИСТИКА КЛИНИКИ ================= -->
     <div class="view-section" id="view-stats">
       <div class="dashboard-header">
-        <h2>Сводная аналитика клиники</h2>
-        <p>Сравнительные показатели, динамика работы и распределение нагрузки по всей больнице</p>
+        <h2 data-i18n="clinic_summary_analytics">Сводная аналитика клиники</h2>
+        <p data-i18n="clinic_summary_subtitle">Сравнительные показатели, динамика работы и распределение нагрузки по всей больнице</p>
       </div>
 
       <!-- Сетка с графиками Chart.js -->
       <div class="stats-charts-grid">
         <div class="chart-container">
-          <h3>Заполняемость по отделениям</h3>
+          <h3 data-i18n="occupancy_by_depts">Заполняемость по отделениям</h3>
           <canvas id="chartOccupancy"></canvas>
         </div>
         <div class="chart-container">
-          <h3>Распределение пациентов по врачам</h3>
+          <h3 data-i18n="patients_by_doctors">Распределение пациентов по врачам</h3>
           <canvas id="chartDoctors"></canvas>
         </div>
       </div>
 
       <!-- Таблица сравнения отделений -->
       <div class="admin-card">
-        <h3>Сравнительная таблица отделений</h3>
+        <h3 data-i18n="depts_comparison_table">Сравнительная таблица отделений</h3>
         <div class="admin-table-wrapper">
           <table class="admin-table" id="clinicComparisonTable">
             <thead>
               <tr>
-                <th>Отделение</th>
-                <th>Всего коек</th>
-                <th>Занято коек</th>
-                <th>Свободно мест</th>
-                <th>Загрузка %</th>
-                <th>Активных броней</th>
+                <th data-i18n="department">Отделение</th>
+                <th data-i18n="total_beds">Всего коек</th>
+                <th data-i18n="occupied_beds">Занято коек</th>
+                <th data-i18n="free_beds_label">Свободно мест</th>
+                <th data-i18n="occupancy_percent">Загрузка %</th>
+                <th data-i18n="active_bookings_header">Активных броней</th>
               </tr>
             </thead>
             <tbody>
@@ -1547,27 +1946,27 @@
     <!-- ================= 4. ЭКРАН АДМИНИСТРАТОРА ================= -->
     <div class="view-section" id="view-admin">
       <div class="dashboard-header">
-        <h2>Панель администратора</h2>
-        <p>Управление структурой клиники, палатами, койками, штатом врачей и общим бэкапом</p>
+        <h2 data-i18n="admin_panel_title">Панель администратора</h2>
+        <p data-i18n="admin_panel_subtitle">Управление структурой клиники, палатами, койками, штатом врачей и общим бэкапом</p>
       </div>
 
       <!-- Управление отделениями -->
       <div class="admin-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--border-light); padding-bottom: 8px;">
-          <h3 style="margin-bottom:0; border-bottom:none; padding-bottom:0;">Структура отделений</h3>
-          <button class="action-btn btn-green" style="width:auto; padding: 6px 12px; font-size:13px;" onclick="openAddDepartmentModal()">+ Новое отделение</button>
+          <h3 style="margin-bottom:0; border-bottom:none; padding-bottom:0;" data-i18n="depts_structure">Структура отделений</h3>
+          <button class="action-btn btn-green" style="width:auto; padding: 6px 12px; font-size:13px;" onclick="openAddDepartmentModal()" data-i18n="new_dept_btn">+ Новое отделение</button>
         </div>
         <div class="admin-table-wrapper">
           <table class="admin-table" id="adminDeptsTable">
             <thead>
               <tr>
-                <th>Название</th>
-                <th>Идентификатор</th>
-                <th>Палаты</th>
-                <th>Коек на палату</th>
-                <th>Цвет темы</th>
-                <th>Врачи</th>
-                <th>Действия</th>
+                <th data-i18n="name_header">Название</th>
+                <th data-i18n="identifier_header">Идентификатор</th>
+                <th data-i18n="wards_header">Палаты</th>
+                <th data-i18n="beds_per_ward_header">Коек на палату</th>
+                <th data-i18n="theme_color_header">Цвет темы</th>
+                <th data-i18n="doctors_header">Врачи</th>
+                <th data-i18n="actions_header">Действия</th>
               </tr>
             </thead>
             <tbody>
@@ -1579,30 +1978,30 @@
 
       <!-- Глобальное резервное копирование -->
       <div class="admin-card">
-        <h3>Единое резервное копирование и сброс</h3>
-        <div style="font-size:14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.4;">
+        <h3 data-i18n="backup_and_reset_header">Единое резервное копирование и сброс</h3>
+        <div style="font-size:14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.4;" data-i18n="backup_notice">
           Резервная копия содержит структуру всех отделений, список активных пациентов, архив выписанных, брони и историю переводов. Сохраняйте данный файл регулярно.
         </div>
         <div class="export-grid">
-          <button class="action-btn btn-purple" onclick="exportGlobalJSON()">Глобальный бэкап (JSON)</button>
-          <button class="action-btn btn-green" onclick="document.getElementById('restoreGlobalFile').click()">Восстановить бэкап (JSON)</button>
+          <button class="action-btn btn-purple" onclick="exportGlobalJSON()" data-i18n="global_backup_btn">Глобальный бэкап (JSON)</button>
+          <button class="action-btn btn-green" onclick="document.getElementById('restoreGlobalFile').click()" data-i18n="restore_backup_btn">Восстановить бэкап (JSON)</button>
           <input type="file" id="restoreGlobalFile" accept=".json" style="display:none" onchange="restoreGlobalJSON(event)">
-          <button class="action-btn btn-red" onclick="resetAllClinicData()">Сбросить ВСЕ данные клиники</button>
+          <button class="action-btn btn-red" onclick="resetAllClinicData()" data-i18n="reset_all_data_btn">Сбросить ВСЕ данные клиники</button>
         </div>
       </div>
       
       <!-- Таблица истории переводов -->
       <div class="admin-card">
-        <h3>История переводов пациентов</h3>
+        <h3 data-i18n="transfer_history_header">История переводов пациентов</h3>
         <div class="admin-table-wrapper">
           <table class="admin-table" id="transferHistoryTable">
             <thead>
               <tr>
-                <th>Дата перевода</th>
-                <th>ФИО пациента</th>
-                <th>Откуда</th>
-                <th>Куда</th>
-                <th>Причина перевода</th>
+                <th data-i18n="transfer_date_header">Дата перевода</th>
+                <th data-i18n="patient_name_header">ФИО пациента</th>
+                <th data-i18n="from_header">Откуда</th>
+                <th data-i18n="to_header">Куда</th>
+                <th data-i18n="transfer_reason_header">Причина перевода</th>
               </tr>
             </thead>
             <tbody>
@@ -1613,10 +2012,168 @@
       </div>
     </div>
 
+    <!-- ================= ОТЗЫВЫ И ОБРАТНАЯ СВЯЗЬ (КОМПАКТНЫЙ ВИДЖЕТ) ================= -->
+    <!-- Круглая кнопка вызова виджета в левом нижнем углу -->
+    <button class="feedback-toggle-btn" id="feedbackToggleBtn" onclick="toggleFeedbackWidget()" title="Оставить отзыв">
+      <i class="fa-solid fa-comment-dots"></i>
+    </button>
+
+    <!-- Контейнер виджета -->
+    <div class="feedback-widget-container" id="feedbackWidget">
+      <div class="feedback-section">
+        <!-- Кнопка настроек в левом верхнем углу -->
+        <button class="feedback-settings-trigger" onclick="openModal('modalFeedbackSettings')" data-i18n-title="feedback_settings_title" title="Настройки Telegram">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+
+        <!-- Кнопка закрытия в правом верхнем углу -->
+        <button class="feedback-close-trigger" onclick="toggleFeedbackWidget()" data-i18n-title="btn_cancel" title="Закрыть">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="feedback-header">
+          <h3 data-i18n="feedback_widget_title">Оставить отзыв</h3>
+          <p data-i18n="feedback_widget_subtitle">Ваши отзывы и предложения отправляются напрямую администрации в Telegram.</p>
+        </div>
+
+        <div id="feedback-success-container" class="feedback-success-screen hidden">
+          <div class="feedback-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <h4 data-i18n="feedback_success_title">Спасибо за отзыв!</h4>
+          <p data-i18n="feedback_success_desc">Ваше сообщение успешно отправлено.</p>
+          <button class="action-btn btn-green" onclick="resetFeedbackForm()" style="width: 100%; justify-content: center;" data-i18n="feedback_write_more">Написать еще</button>
+        </div>
+
+        <form id="widget-feedback-form">
+          <!-- Категория обращения -->
+          <div class="form-group">
+            <label style="font-weight: bold; margin-bottom: 4px;" data-i18n="feedback_type_label">Тип обращения</label>
+            <div class="feedback-category-grid">
+              <label class="feedback-category-pill">
+                <input type="radio" name="widget-category" value="Предложение" checked>
+                <div class="feedback-pill-content">
+                  <i class="fa-solid fa-lightbulb"></i>
+                  <span data-i18n="feedback_type_suggestion">Предложение</span>
+                </div>
+              </label>
+              <label class="feedback-category-pill">
+                <input type="radio" name="widget-category" value="Ошибка">
+                <div class="feedback-pill-content">
+                  <i class="fa-solid fa-bug"></i>
+                  <span data-i18n="feedback_type_bug">Ошибка</span>
+                </div>
+              </label>
+              <label class="feedback-category-pill">
+                <input type="radio" name="widget-category" value="Вопрос">
+                <div class="feedback-pill-content">
+                  <i class="fa-solid fa-circle-question"></i>
+                  <span data-i18n="feedback_type_question">Вопрос</span>
+                </div>
+              </label>
+              <label class="feedback-category-pill">
+                <input type="radio" name="widget-category" value="Благодарность">
+                <div class="feedback-pill-content">
+                  <i class="fa-solid fa-face-smile-beam"></i>
+                  <span data-i18n="feedback_type_thanks">Спасибо!</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Оценка звезд -->
+          <div class="form-group">
+            <div class="feedback-rating-container">
+              <div class="feedback-star-rating">
+                <input type="radio" id="w-star-5" name="widget-rating" value="5" />
+                <label for="w-star-5" class="fa-solid fa-star" data-i18n-title="feedback_rating_5" title="Отлично"></label>
+                
+                <input type="radio" id="w-star-4" name="widget-rating" value="4" />
+                <label for="w-star-4" class="fa-solid fa-star" data-i18n-title="feedback_rating_4" title="Хорошо"></label>
+                
+                <input type="radio" id="w-star-3" name="widget-rating" value="3" />
+                <label for="w-star-3" class="fa-solid fa-star" data-i18n-title="feedback_rating_3" title="Удовлетворительно"></label>
+                
+                <input type="radio" id="w-star-2" name="widget-rating" value="2" />
+                <label for="w-star-2" class="fa-solid fa-star" data-i18n-title="feedback_rating_2" title="Неудовлетворительно"></label>
+                
+                <input type="radio" id="w-star-1" name="widget-rating" value="1" />
+                <label for="w-star-1" class="fa-solid fa-star" data-i18n-title="feedback_rating_1" title="Очень плохо"></label>
+              </div>
+              <span id="widget-rating-text" class="feedback-rating-text" data-i18n="feedback_rating_select">Выберите звезды для оценки</span>
+            </div>
+          </div>
+
+          <!-- Имя пользователя -->
+          <div class="form-group">
+            <label style="font-weight: bold;" data-i18n="feedback_name_label">Ваше имя *</label>
+            <input type="text" id="widget-user-name" placeholder="Введите ваше имя" data-i18n-placeholder="feedback_name_placeholder" required style="width: 100%;">
+          </div>
+
+          <!-- Сообщение -->
+          <div class="form-group">
+            <label style="font-weight: bold;" data-i18n="feedback_text_label">Ваш отзыв *</label>
+            <textarea id="widget-user-message" rows="3" placeholder="Опишите ваши предложения или возникшую ошибку..." data-i18n-placeholder="feedback_text_placeholder" required style="width: 100%; resize: none;"></textarea>
+          </div>
+
+          <!-- Кнопка отправки -->
+          <div class="form-group" style="margin-top: 10px;">
+            <button type="submit" id="widget-submit-btn" class="action-btn btn-green" style="width: 100%; justify-content: center; font-weight: bold; padding: 10px;">
+              <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i><span data-i18n="feedback_submit_btn">Отправить отзыв</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Предупреждение о настройках -->
+        <div id="widget-warning-alert" class="feedback-warning-alert hidden">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span data-i18n="feedback_warning_bot">Внимание! Telegram-бот не настроен.</span>
+        </div>
+      </div>
+    </div>
+
   </div> <!-- /container -->
 
+  <!-- ================= МОДАЛЬНОЕ ОКНО НАСТРОЕК TELEGRAM ================= -->
+  <div class="modal-overlay" id="modalFeedbackSettings">
+    <div class="modal">
+      <h2 data-i18n="feedback_settings_title">Настройки Telegram</h2>
+      <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 15px;" data-i18n="feedback_settings_desc">Укажите данные вашего бота для приема отзывов клиники:</p>
+      
+      <div class="form-group">
+        <label data-i18n="feedback_bot_token">Токен бота *</label>
+        <input type="password" id="widget-bot-token" placeholder="123456789:ABCdefGhI..." data-i18n-placeholder="feedback_bot_token" style="width: 100%;">
+      </div>
+
+      <div class="form-group">
+        <label data-i18n="feedback_chat_id">ID чата / Получателя *</label>
+        <input type="text" id="widget-chat-id" placeholder="987654321" data-i18n-placeholder="feedback_chat_id" style="width: 100%;">
+      </div>
+
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button class="action-btn btn-orange" id="widget-test-btn" onclick="testWidgetConnection()" data-i18n="feedback_test_btn">Проверить</button>
+        <button class="action-btn btn-green" onclick="saveWidgetSettings()" data-i18n="feedback_save_btn">Сохранить</button>
+        <button class="action-btn btn-gray" onclick="closeModal('modalFeedbackSettings')" data-i18n="feedback_cancel_btn">Отмена</button>
+      </div>
+
+      <div style="margin-top: 15px; border-top: 1px solid rgba(13, 124, 140, 0.1); padding-top: 12px; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+        <strong style="display: block; margin-bottom: 6px;" data-i18n="feedback_instructions_title"><i class="fa-solid fa-circle-info"></i> Краткая инструкция по созданию бота:</strong>
+        <ol style="padding-left: 15px; display: flex; flex-direction: column; gap: 6px;">
+          <li data-i18n-html="feedback_instruction_1">Найдите бота <a href="https://t.me/BotFather" target="_blank" style="color: var(--primary); font-weight: bold;">@BotFather</a> в Telegram и отправьте <code>/newbot</code>.</li>
+          <li data-i18n-html="feedback_instruction_2">Скопируйте выданный API Token в поле "Токен бота" выше.</li>
+          <li data-i18n-html="feedback_instruction_3">Перейдите в свой бот и обязательно нажмите **Start** (/start).</li>
+          <li data-i18n-html="feedback_instruction_4">Узнайте свой ID, написав боту <a href="https://t.me/userinfobot" target="_blank" style="color: var(--primary); font-weight: bold;">@userinfobot</a>. Введите его в поле "ID чата".</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Всплывающий тост для отзывов -->
+  <div id="widget-toast" class="feedback-toast">
+    <i class="toast-icon fa-solid" style="font-size: 18px;"></i>
+    <span id="widget-toast-msg"></span>
+  </div>
+
   <!-- Плавающая кнопка быстрого добавления (FAB) -->
-  <button class="fab" id="globalFab" onclick="openAddPatient()" title="Добавить пациента">+</button>
+  <button class="fab" id="globalFab" onclick="openAddPatient()" data-i18n-title="modal_admission_title" title="Добавить пациента">+</button>
 
 
   <!-- ================= МОДАЛЬНЫЕ ОКНА ================= -->
@@ -1624,51 +2181,51 @@
   <!-- 1. Поступление / Редактирование пациента -->
   <div class="modal-overlay" id="modalAdd">
     <div class="modal">
-      <h2 id="modalTitle">Поступление пациента</h2>
+      <h2 id="modalTitle" data-i18n="modal_admission_title">Поступление пациента</h2>
       <input type="hidden" id="editPatientId">
       
       <div class="form-group">
-        <label>ФИО пациента *</label>
-        <input type="text" id="patientName" placeholder="Иванов Иван Иванович">
+        <label data-i18n="label_patient_name">ФИО пациента *</label>
+        <input type="text" id="patientName" placeholder="Иванов Иван Иванович" data-i18n-placeholder="placeholder_patient_name">
       </div>
       
       <div class="form-row">
         <div class="form-group">
-          <label>Палата *</label>
+          <label data-i18n="label_room">Палата *</label>
           <select id="patientRoom" onchange="updateBedOptions('patientBed', this.value, 'editPatientId')"></select>
         </div>
         <div class="form-group">
-          <label>Койка *</label>
+          <label data-i18n="label_bed">Койка *</label>
           <select id="patientBed"></select>
         </div>
       </div>
       
       <div class="form-row">
         <div class="form-group">
-          <label>Дата поступления *</label>
+          <label data-i18n="label_admission_date">Дата поступления *</label>
           <input type="date" id="patientAdmission">
         </div>
         <div class="form-group">
-          <label>План. дата выписки</label>
+          <label data-i18n="label_discharge_date">План. дата выписки</label>
           <input type="date" id="patientDischarge">
         </div>
       </div>
       
       <div class="form-group">
-        <label>Лечащий врач *</label>
+        <label data-i18n="label_doctor">Лечащий врач *</label>
         <select id="patientDoctor">
-          <option value="">— Выберите врача —</option>
+          <option value="" data-i18n="select_doctor_default">— Выберите врача —</option>
         </select>
       </div>
       
       <div class="form-group">
-        <label>Диагноз / Примечание</label>
-        <textarea id="patientNote" rows="2" placeholder="Краткие медицинские отметки (без смайлов)"></textarea>
+        <label data-i18n="label_note">Диагноз / Примечание</label>
+        <textarea id="patientNote" rows="2" placeholder="Краткие медицинские отметки (без смайлов)" data-i18n-placeholder="placeholder_note"></textarea>
       </div>
       
       <div class="modal-actions">
-        <button class="action-btn btn-green" onclick="savePatient()">Сохранить</button>
-        <button class="action-btn btn-gray" onclick="closeModal('modalAdd')">Отмена</button>
+        <button class="action-btn btn-green" onclick="savePatient()" data-i18n="btn_save">Сохранить</button>
+        <button class="action-btn btn-gray" onclick="closeModal('modalAdd')" data-i18n="btn_cancel">Отмена</button>
       </div>
     </div>
   </div>
@@ -1677,45 +2234,45 @@
   <!-- 2. Добавление / Редактирование брони -->
   <div class="modal-overlay" id="modalBooking">
     <div class="modal">
-      <h2 id="bookingModalTitle">Бронь койки</h2>
+      <h2 id="bookingModalTitle" data-i18n="modal_booking_title">Бронь койки</h2>
       <input type="hidden" id="editBookingId">
       
       <div class="form-group">
-        <label>ФИО пациента *</label>
-        <input type="text" id="bookingName" placeholder="Иванов Иван Иванович">
+        <label data-i18n="label_patient_name">ФИО пациента *</label>
+        <input type="text" id="bookingName" placeholder="Иванов Иван Иванович" data-i18n-placeholder="placeholder_patient_name">
       </div>
       
       <div class="form-row">
         <div class="form-group">
-          <label>Палата *</label>
+          <label data-i18n="label_room">Палата *</label>
           <select id="bookingRoom" onchange="updateBedOptions('bookingBed', this.value, 'editBookingId', true)"></select>
         </div>
         <div class="form-group">
-          <label>Койка *</label>
+          <label data-i18n="label_bed">Койка *</label>
           <select id="bookingBed"></select>
         </div>
       </div>
       
       <div class="form-group">
-        <label>Дата планируемого поступления *</label>
+        <label data-i18n="label_booking_date">Дата планируемого поступления *</label>
         <input type="date" id="bookingDate">
       </div>
       
       <div class="form-group">
-        <label>Лечащий врач</label>
+        <label data-i18n="label_doctor">Лечащий врач</label>
         <select id="bookingDoctor">
-          <option value="">— Не назначен —</option>
+          <option value="" data-i18n="select_doctor_no_assign">— Не назначен —</option>
         </select>
       </div>
       
       <div class="form-group">
-        <label>Телефон / Примечание</label>
-        <input type="text" id="bookingNote" placeholder="Контактный телефон, примечание">
+        <label data-i18n="label_booking_note">Телефон / Примечание</label>
+        <input type="text" id="bookingNote" placeholder="Контактный телефон, примечание" data-i18n-placeholder="placeholder_booking_note">
       </div>
       
       <div class="modal-actions">
-        <button class="action-btn btn-orange" onclick="saveBooking()">Сохранить бронь</button>
-        <button class="action-btn btn-gray" onclick="closeModal('modalBooking')">Отмена</button>
+        <button class="action-btn btn-orange" onclick="saveBooking()" data-i18n="btn_save">Сохранить бронь</button>
+        <button class="action-btn btn-gray" onclick="closeModal('modalBooking')" data-i18n="btn_cancel">Отмена</button>
       </div>
     </div>
   </div>
@@ -1724,103 +2281,887 @@
   <!-- 3. Перевод пациента в другое отделение -->
   <div class="modal-overlay" id="modalTransfer">
     <div class="modal">
-      <h2>Перевод пациента в другое отделение</h2>
+      <h2 data-i18n="modal_transfer_title">Перевод пациента в другое отделение</h2>
       <input type="hidden" id="transferPatientId">
       
       <div class="form-group">
-        <label>Пациент</label>
-        <input type="text" id="transferPatientName" readonly style="background: var(--surface-alt); font-weight: bold;">
-      </div>
-
-      <div class="form-group">
-        <label>Текущее размещение</label>
-        <input type="text" id="transferCurrentPlacement" readonly style="background: var(--surface-alt);">
+        <label data-i18n="label_transfer_patient">Пациент</label>
+        <input type="text" id="transferPatientName" readonly style="width: 100%; opacity: 0.8; background: rgba(255, 255, 255, 0.05);">
       </div>
       
       <div class="form-group">
-        <label>Целевое отделение *</label>
-        <select id="transferDept" onchange="onTransferDeptChange(this.value)">
-          <!-- Наполняется динамически -->
-        </select>
+        <label data-i18n="label_current_placement">Текущее размещение</label>
+        <input type="text" id="transferCurrentPlacement" readonly style="width: 100%; opacity: 0.8; background: rgba(255, 255, 255, 0.05);">
       </div>
-
+      
+      <div class="form-group">
+        <label data-i18n="label_target_dept">Целевое отделение *</label>
+        <select id="transferDept" onchange="onTransferDeptChange(this.value)"></select>
+      </div>
+      
       <div class="form-row">
         <div class="form-group">
-          <label>Целевая палата *</label>
+          <label data-i18n="label_target_room">Целевая палата *</label>
           <select id="transferRoom" onchange="updateBedOptions('transferBed', this.value, null)"></select>
         </div>
         <div class="form-group">
-          <label>Койка *</label>
+          <label data-i18n="label_bed">Койка *</label>
           <select id="transferBed"></select>
         </div>
       </div>
-
+      
       <div class="form-group">
-        <label>Обоснование перевода *</label>
-        <textarea id="transferReason" rows="2" placeholder="Укажите причину перевода пациента"></textarea>
+        <label data-i18n="label_transfer_reason">Обоснование перевода *</label>
+        <textarea id="transferReason" rows="2" placeholder="Укажите причину перевода пациента" data-i18n-placeholder="placeholder_transfer_reason"></textarea>
       </div>
       
       <div class="modal-actions">
-        <button class="action-btn btn-purple" onclick="executePatientTransfer()">Перевести</button>
-        <button class="action-btn btn-gray" onclick="closeModal('modalTransfer')">Отмена</button>
+        <button class="action-btn btn-orange" onclick="executePatientTransfer()" data-i18n="btn_transfer">Перевести</button>
+        <button class="action-btn btn-gray" onclick="closeModal('modalTransfer')" data-i18n="btn_cancel">Отмена</button>
       </div>
     </div>
   </div>
 
-
-  <!-- 4. Добавление / Редактирование отделения в админке -->
+  <!-- 4. Настройка / Добавление отделения (Админ) -->
   <div class="modal-overlay" id="modalDeptAdmin">
     <div class="modal">
-      <h2 id="deptModalTitle">Настройка отделения</h2>
+      <h2 id="deptModalTitle" data-i18n="modal_dept_admin_title">Настройка отделения</h2>
       <input type="hidden" id="adminDeptId">
       
       <div class="form-group" id="deptIdGroup">
-        <label>Уникальный ID отделения (только латиница, например: cardio) *</label>
+        <label data-i18n="label_dept_id">Уникальный ID отделения (только латиница, например: cardio) *</label>
         <input type="text" id="adminDeptCode" placeholder="cardio">
       </div>
-
+      
       <div class="form-group">
-        <label>Название отделения *</label>
-        <input type="text" id="adminDeptName" placeholder="Кардиология">
+        <label data-i18n="label_dept_name">Название отделения *</label>
+        <input type="text" id="adminDeptName" placeholder="Кардиология" data-i18n-placeholder="placeholder_dept_name">
       </div>
-
+      
       <div class="form-row">
         <div class="form-group">
-          <label>Начальный номер палаты *</label>
-          <input type="number" id="adminDeptRoomStart" placeholder="201">
+          <label data-i18n="label_dept_room_start">Начальный номер палаты *</label>
+          <input type="number" id="adminDeptRoomStart" placeholder="101">
         </div>
         <div class="form-group">
-          <label>Конечный номер палаты *</label>
-          <input type="number" id="adminDeptRoomEnd" placeholder="225">
+          <label data-i18n="label_dept_room_end">Конечный номер палаты *</label>
+          <input type="number" id="adminDeptRoomEnd" placeholder="120">
         </div>
       </div>
-
+      
       <div class="form-row">
         <div class="form-group">
-          <label>Коек в одной палате *</label>
-          <input type="number" id="adminDeptBeds" value="2" min="1" max="10">
+          <label data-i18n="label_dept_beds">Коек в одной палате *</label>
+          <input type="number" id="adminDeptBeds" value="2" min="1">
         </div>
         <div class="form-group">
-          <label>Цветовая схема (Hex) *</label>
-          <input type="color" id="adminDeptColor" value="#dc2626" style="height: 44px; padding: 2px;">
+          <label data-i18n="label_dept_color">Цветовая схема (Hex) *</label>
+          <input type="color" id="adminDeptColor" value="#4b5563" style="padding:0; height:40px;">
         </div>
       </div>
-
+      
       <div class="form-group">
-        <label>Список врачей (через запятую) *</label>
-        <textarea id="adminDeptDoctors" rows="3" placeholder="Доктор А., Доктор Б., Доктор В."></textarea>
+        <label data-i18n="label_dept_doctors">Список врачей (через запятую) *</label>
+        <input type="text" id="adminDeptDoctors" placeholder="Доктор А., Доктор Б." data-i18n-placeholder="placeholder_dept_doctors">
       </div>
       
       <div class="modal-actions">
-        <button class="action-btn btn-green" onclick="saveDepartmentAdmin()">Сохранить отделение</button>
-        <button class="action-btn btn-gray" onclick="closeModal('modalDeptAdmin')">Отмена</button>
+        <button class="action-btn btn-green" onclick="saveDepartmentAdmin()" data-i18n="btn_save_dept">Сохранить отделение</button>
+        <button class="action-btn btn-gray" onclick="closeModal('modalDeptAdmin')" data-i18n="btn_cancel">Отмена</button>
       </div>
     </div>
   </div>
 
-
-  <!-- ================= Скрипты приложения ================= -->
   <script>
+    const TRANSLATIONS = {
+      uz: {
+        // Header
+        "header-logo-title": "Klinika Markazi",
+        "header-logo-subtitle": "Birlashtirilgan ko'p tarmoqli tizim",
+        "search-placeholder": "Bemorlarni global qidirish...",
+        "nav-dashboard": "Bosh sahifa",
+        "nav-stats": "Hisobot",
+        "nav-admin": "Admin",
+        // Dashboard
+        "clinic_title": "Ko'p tarmoqli terapiya tibbiyot markazi",
+        "clinic_subtitle": "Klinika bo'limlarining real vaqtdagi bandlik holati",
+        "total_beds": "Jami koykalar",
+        "occupied_beds": "Band bemorlar",
+        "free_beds": "Bo'sh joylar",
+        "occupancy_rate": "Bandlik darajasi",
+        "active_bookings": "Faol bronlar",
+        "clinic_departments": "Klinika bo'limlari",
+        // Department
+        "back_to_depts": "← Bo'limlar ro'yxatiga",
+        "occupied": "Band",
+        "free": "Bo'sh",
+        "bookings_label": "Bronlar",
+        "discharges_today_label": "Bugun javob beriladiganlar",
+        "wards": "Palatalar",
+        "patients_tab": "Bemorlar",
+        "bookings_tab": "Bron",
+        "stats_tab": "Statistika",
+        "partially": "Qisman",
+        "booking_notice": "Koykani oldindan bron qilish. Rejalashtirilgan sana kelganda koyka avtomatik ravishda bron qilinadi.",
+        "new_booking_btn": "+ Yangi bron",
+        "admissions_calendar": "Gospitalizatsiya taqvimi",
+        "calendar_legend": "Bir kundagi qabul/chiqishlar (katakchalarda ko'rsatiladi)",
+        "monthly_indicators": "Joriy oy uchun ko'rsatkichlar",
+        "total_admissions": "Jami qabullar:",
+        "total_discharges": "Jami chiqishlar:",
+        "currently_treating": "Hozir davolanmoqda:",
+        "avg_stay_duration": "O'rtacha davolanish muddati:",
+        "dept_occupancy_load": "Bo'lim bandligi:",
+        "by_attending_doctors": "Davolovchi shifokorlar bo'yicha",
+        "dept_data_management": "Bo'lim ma'lumotlarini boshqarish",
+        "export_csv_btn": "CSV formatida eksport (jadval)",
+        "import_csv_btn": "CSV formatidan import",
+        "export_json_btn": "JSON formatida eksport (nusxa)",
+        // Summary
+        "clinic_summary_analytics": "Klinikaning umumiy tahlili",
+        "clinic_summary_subtitle": "Kasalxona bo'yicha qiyosiy ko'rsatkichlar, ish dinamikasi va yuklama taqsimoti",
+        "occupancy_by_depts": "Bo'limlar bo'yicha bandlik",
+        "patients_by_doctors": "Bemorlarning shifokorlar bo'yicha taqsimoti",
+        "depts_comparison_table": "Bo'limlarni taqqoslash jadvali",
+        "department": "Bo'lim",
+        "free_beds_label": "Bo'sh joylar",
+        "occupancy_percent": "Yuklama %",
+        "active_bookings_header": "Faol bronlar",
+        // Admin
+        "admin_panel_title": "Administrator paneli",
+        "admin_panel_subtitle": "Klinika tuzilishi, palatalar, koykalar, shifokorlar shtati va umumiy zaxira nusxasini boshqarish",
+        "depts_structure": "Bo'limlar tuzilishi",
+        "new_dept_btn": "+ Yangi bo'lim",
+        "name_header": "Nomi",
+        "identifier_header": "Identifikator",
+        "wards_header": "Palatalar",
+        "beds_per_ward_header": "Palatadagi koykalar",
+        "theme_color_header": "Mavzu rangi",
+        "doctors_header": "Shifokorlar",
+        "actions_header": "Harakatlar",
+        "backup_and_reset_header": "Yagona zaxira nusxasi va qayta tiklash",
+        "backup_notice": "Zaxira nusxasi barcha bo'limlar tuzilishini, faol bemorlar ro'yxatini, arxivlanganlarni, bronlarni va o'tkazishlar tarixini o'z ichiga oladi. Ushbu faylni muntazam saqlab boring.",
+        "global_backup_btn": "Global zaxira nusxasi (JSON)",
+        "restore_backup_btn": "Zaxirani tiklash (JSON)",
+        "reset_all_data_btn": "Klinikaning BARCHA ma'lumotlarini o'chirish",
+        "transfer_history_header": "Bemorlarni o'tkazish tarixi",
+        "transfer_date_header": "O'tkazilgan sana",
+        "patient_name_header": "Bemorning F.I.Sh.",
+        "from_header": "Qayerdan",
+        "to_header": "Qayerga",
+        "transfer_reason_header": "O'tkazish sababi",
+        // Feedback
+        "feedback_widget_title": "Fikr-mulohaza qoldirish",
+        "feedback_widget_subtitle": "Sizning fikr va takliflaringiz to'g'ridan-to'g'ri Telegram orqali administratsiyaga yuboriladi.",
+        "feedback_success_title": "Fikr-mulohaza uchun rahmat!",
+        "feedback_success_desc": "Sizning xabaringiz muvaffaqiyatli yuborildi.",
+        "feedback_write_more": "Yana yozish",
+        "feedback_type_label": "Murojaat turi",
+        "feedback_type_suggestion": "Taklif",
+        "feedback_type_bug": "Xato",
+        "feedback_type_question": "Savol",
+        "feedback_type_thanks": "Rahmat!",
+        "feedback_rating_select": "Baholash uchun yulduzchalarni tanlang",
+        "feedback_name_label": "Ismingiz *",
+        "feedback_name_placeholder": "Ismingizni kiriting",
+        "feedback_text_label": "Fikringiz *",
+        "feedback_text_placeholder": "Takliflaringiz yoki yuzaga kelgan xatolikni tavsiflang...",
+        "feedback_submit_btn": "Fikrni yuborish",
+        "feedback_warning_bot": "Diqqat! Telegram-bot sozlanmagan.",
+        "feedback_settings_title": "Telegram sozlamalari",
+        "feedback_settings_desc": "Fikr-mulohazalarni qabul qilish uchun bot ma'lumotlarini kiriting:",
+        "feedback_bot_token": "Bot tokeni *",
+        "feedback_chat_id": "Chat ID / Qabul qiluvchi *",
+        "feedback_test_btn": "Tekshirish",
+        "feedback_save_btn": "Saqlash",
+        "feedback_cancel_btn": "Bekor qilish",
+        "feedback_instructions_title": "Bot yaratish bo'yicha qisqacha yo'riqnoma:",
+        "feedback_instruction_1": "Telegram-da <a href=\"https://t.me/BotFather\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@BotFather</a> botini toping va <code>/newbot</code> yuboring.",
+        "feedback_instruction_2": "Olingan API tokeni yuqoridagi \"Bot tokeni\" maydoniga nusxalang.",
+        "feedback_instruction_3": "O'z botingizga o'ting va albatta **Start** (/start) bosing.",
+        "feedback_instruction_4": "<a href=\"https://t.me/userinfobot\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@userinfobot</a> botiga yozib o'z ID-ingizni bilib oling. Uni \"Chat ID\" maydoniga kiriting.",
+        // Modals & Popups
+        "modal_admission_title": "Bemorning qabul qilinishi",
+        "label_patient_name": "Bemorning F.I.Sh. *",
+        "placeholder_patient_name": "Aliyev Vali Aliyevich",
+        "label_room": "Palata *",
+        "label_bed": "Koyka *",
+        "label_admission_date": "Qabul qilingan sana *",
+        "label_discharge_date": "Rejalashtirilgan chiqish sanasi",
+        "label_doctor": "Davolovchi shifokor *",
+        "select_doctor_default": "— Shifokorni tanlang —",
+        "label_note": "Tashxis / Izoh",
+        "placeholder_note": "Qisqacha tibbiy eslatmalar (smayliklarsiz)",
+        "btn_save": "Save",
+        "btn_cancel": "Cancel",
+        "modal_booking_title": "Koykani bron qilish",
+        "label_booking_date": "Rejalashtirilgan qabul sanasi *",
+        "select_doctor_no_assign": "— Tayinlanmagan —",
+        "label_booking_note": "Telefon / Izoh",
+        "placeholder_booking_note": "Aloqa telefoni, izoh",
+        "modal_transfer_title": "Bemorni boshqa bo'limga o'tkazish",
+        "label_transfer_patient": "Bemor",
+        "label_current_placement": "Joriy joylashuv",
+        "label_target_dept": "Maqsadli bo'lim *",
+        "label_target_room": "Maqsadli palata *",
+        "label_transfer_reason": "O'tkazish asosi *",
+        "placeholder_transfer_reason": "Bemorning o'tkazilish sababini ko'rsating",
+        "modal_dept_admin_title": "Bo'lim sozlamalari",
+        "label_dept_id": "Bo'limning unikal ID-si (faqat lotincha, masalan: cardio) *",
+        "label_dept_name": "Bo'lim nomi *",
+        "placeholder_dept_name": "Kardiologiya",
+        "label_dept_room_start": "Boshlang'ich palata raqami *",
+        "label_dept_room_end": "Yakuniy palata raqami *",
+        "label_dept_beds": "Bitta palatadagi koykalar soni *",
+        "label_dept_color": "Mavzu rangi (Hex) *",
+        "label_dept_doctors": "Shifokorlar ro'yxati (vergul bilan ajratilgan) *",
+        "placeholder_dept_doctors": "Shifokor A., Shifokor B.",
+        "btn_save_dept": "Bo'limni saqlash",
+        "btn_transfer": "O'tkazish",
+        // Interactive Alerts & Messages
+        "alert_select_dept": "Iltimos, bosh sahifada bo'limni tanlang",
+        "alert_fill_reason": "Iltimos, o'tkazishning tibbiy asosi yoki sababini ko'rsating",
+        "alert_bed_occupied": "Tanlangan koyka allaqachon boshqa bemor tomonidan band qilingan",
+        "alert_placement_same": "Maqsadli joylashuv joriy joylashuv bilan bir xil",
+        "alert_transfer_success": "Bemor muvaffaqiyatli o'tkazildi",
+        "alert_fill_dept_name": "Bo'lim nomini ko'rsating",
+        "alert_fill_rooms": "Palatalarning to'g'ri oralig'ini ko'rsating",
+        "alert_beds_min": "Koykalar soni kamida 1 ta bo'lishi kerak",
+        "alert_fill_doctors": "Davolovchi shifokorlar ro'yxatini ko'rsating",
+        "alert_dept_id_format": "Bo'lim ID-si faqat lotin harflari va raqamlardan iborat bo'lishi kerak",
+        "alert_dept_exists": "Bunday ID-ga ega bo'lim allaqachon mavjud",
+        "alert_dept_saved": "Bo'lim ma'lumotlari muvaffaqiyatli saqlandi",
+        "alert_reset_confirm_1": "Klinikaning BARCHA ma'lumotlarini o'chirib tashlamoqchimisiz? Bu amalni bekor qilib bo'lmaydi.",
+        "alert_reset_confirm_2": "Barcha bemorlar, bronlar, arxivlar va shifokorlar ro'yxati o'chiriladi. Tasdiqlaysizmi?",
+        "alert_reset_success": "Tizim to'liq boshlang'ich sozlamalarga qaytarildi.",
+        "alert_backup_saved": "Klinikaning global zaxira nusxasi saqlandi.",
+        "alert_backup_error": "Zaxira nusxasini eksport qilishda xatolik yuz berdi: ",
+        "alert_restore_confirm": "⚠️ Barcha joriy ma'lumotlar to'liq fayldagi ma'lumotlar bilan almashtiriladi. Davom etishni xohlaysizmi?",
+        "alert_restore_invalid": "Fayl formati noto'g'ri. Bemorlar bazasi mavjud emas.",
+        "alert_restore_legacy": "Eski kardiologiya fayli aniqlandi. Kardiologiya bo'limiga muvaffaqiyatli ko'chirildi.",
+        "alert_restore_success": "Global zaxira nusxasi muvaffaqiyatli tiklandi.",
+        "alert_dept_backup_saved": "bo'limining zaxira nusxasi saqlandi.",
+        "alert_dept_export_error": "Bo'limni JSON formatida eksport qilishda xatolik yuz berdi: ",
+        "alert_dept_no_data": "Ushbu bo'limda eksport qilish uchun ma'lumotlar yo'q.",
+        "alert_csv_generated": "Bo'lim ma'lumotlari eksport qilindi: {n} qator.",
+        "alert_csv_invalid_file": "CSV fayli bo'sh yoki shikastlangan",
+        "alert_csv_import_confirm": "bo'limiga {n} ta qator import qilinsinmi? Ushbu bo'limning eski ma'lumotlari o'chiriladi.",
+        "alert_csv_header_error": "CSV sarlavhalari tuzilishi noto'g'ri",
+        "alert_csv_import_success": "bo'limining ma'lumotlari muvaffaqiyatli import qilindi.",
+        "alert_feedback_fill_settings": "Telegram bot sozlamalari to'ldirilmagan!",
+        "alert_feedback_stars": "Iltimos, yulduzchalar yordamida baholang!",
+        "alert_feedback_success": "Fikr muvaffaqiyatli yuborildi!",
+        "alert_feedback_settings_saved": "Sozlamalar muvaffaqiyatli saqlandi!",
+        "alert_feedback_test_success": "Ulanish muvaffaqiyatli! Telegram botingizni tekshiring.",
+        "alert_feedback_test_error": "Xatolik: ",
+        "alert_feedback_network_error": "Tarmoq xatosi. Ulanishni tekshiring.",
+        "alert_patient_name_required": "Bemorning F.I.Sh. kiriting",
+        "alert_admission_date_required": "Qabul sanasini ko'rsating",
+        "alert_doctor_required": "Davolovchi shifokorni tanlang",
+        "alert_booking_date_required": "Rejalashtirilgan qabul sanasini ko'rsating",
+        "alert_booking_conflict": "Ushbu koyka uchun ko'rsatilgan sanada bron mavjud: ",
+        "alert_booking_delete_confirm": "Haqiqatan ham bronni o'chirmoqchimisiz: ",
+        "alert_booking_convert_confirm": "bemorni palata {r}, koyka {b} ga gospitalizatsiya qilmoqchimisiz?",
+        "alert_booking_convert_success": "Bemor gospitalizatsiya qilindi. Zarurat bo'lsa, chiqish sanasini belgilang.",
+        "alert_discharge_confirm": "Bemorni ro'yxatdan chiqarmoqchimisiz (javob bermoqchimisiz): ",
+        "alert_discharge_upcoming_booking": "💡 Eslatma! Bo'shagan koykada bron mavjud: {name} (sana: {date}). Uni qabul qilish uchun 'Bron' bo'limiga o'ting.",
+        "alert_patient_found": "Bemor topildi: {name}, bo'lim: {dept}, palata {room}, koyka {bed}",
+        "doctors_no_added": "Shifokorlar qo'shilmagan",
+        "admissions_label": "Qabullar",
+        "discharges_label": "Chiqishlar",
+        "days_short": "kun",
+        "total_beds_label": "Jami koykalar",
+        "enter_dept": "Kirish →",
+        "total_beds_occupied": "Koykalar jami / band:",
+        "chart_beds_occupied": "Band koykalar",
+        "chart_beds_free": "Bo'sh koykalar",
+        "chart_patients_per_doctor": "Shifokorlar yuklamasi",
+        "btn_edit_admin": "Tahrirlash",
+        "admin_no_transfers_yet": "Bemorlarni o'tkazish tarixi hozircha bo'sh",
+        "modal_add_dept_title": "Yangi bo'lim qo'shish",
+        "transfer_placement_detail": "pal. {room}, koyka {bed}",
+        "alert_feedback_invalid_token": "API token yoki chat ID noto'g'ri",
+        "feedback_testing_btn_label": "Tekshirilmoqda...",
+        "feedback_sending": "Yuborilmoqda...",
+        "feedback_rating_text_1": "Juda yomon - 1 yulduzcha 😞",
+        "feedback_rating_text_2": "Qoniqarsiz - 2 yulduzcha 😐",
+        "feedback_rating_text_3": "Qoniqarli - 3 yulduzcha 🙂",
+        "feedback_rating_text_4": "Yaxshi - 4 yulduzcha 🌟",
+        "feedback_rating_text_5": "A'lo - 5 yulduzcha 🔥",
+        "csv_header_type": "Turi",
+        "csv_header_id": "ID",
+        "csv_header_name": "F.I.Sh.",
+        "csv_header_room": "Palata",
+        "csv_header_bed": "Koyka",
+        "csv_header_adm_date": "Qabul sanasi",
+        "csv_header_plan_disc": "Rejalashtirilgan chiqish",
+        "csv_header_disc_date": "Javob berilgan sana",
+        "csv_header_days": "Kunlar",
+        "csv_header_doctor": "Shifokor",
+        "csv_header_note": "Izoh",
+        "csv_header_status": "Status",
+        "csv_type_patient": "Bemor",
+        "csv_type_booking": "Bron",
+        "csv_status_discharged": "Javob berilgan",
+        "csv_status_treating": "Davolanmoqda"
+      },
+      ru: {
+        // Header
+        "header-logo-title": "Клинический Центр",
+        "header-logo-subtitle": "Объединенная многопрофильная система",
+        "search-placeholder": "Глобальный поиск пациентов...",
+        "nav-dashboard": "Главная",
+        "nav-stats": "Сводка",
+        "nav-admin": "Админка",
+        // Dashboard
+        "clinic_title": "Многопрофильный медицинский центр терапии",
+        "clinic_subtitle": "Оперативная сводка заполняемости отделений клиники в реальном времени",
+        "total_beds": "Всего коек",
+        "occupied_beds": "Занято пациентов",
+        "free_beds": "Свободно мест",
+        "occupancy_rate": "Загруженность",
+        "active_bookings": "Активных броней",
+        "clinic_departments": "Отделения клиники",
+        // Department
+        "back_to_depts": "← К списку отделений",
+        "occupied": "Занято",
+        "free": "Свободно",
+        "bookings_label": "Брони",
+        "discharges_today_label": "Выписка сегодня",
+        "wards": "Палаты",
+        "patients_tab": "Пациенты",
+        "bookings_tab": "Бронь",
+        "stats_tab": "Статистика",
+        "partially": "Частично",
+        "booking_notice": "Предварительное бронирование койки. При наступлении плановой даты койка автоматически помечается бронью.",
+        "new_booking_btn": "+ Новая бронь",
+        "admissions_calendar": "Календарь госпитализаций",
+        "calendar_legend": "Поступления / выписки за день (отображаются в ячейках)",
+        "monthly_indicators": "Показатели за текущий месяц",
+        "total_admissions": "Всего поступлений:",
+        "total_discharges": "Всего выписок:",
+        "currently_treating": "Сейчас на лечении:",
+        "avg_stay_duration": "Средний срок лечения:",
+        "dept_occupancy_load": "Загрузка отделения:",
+        "by_attending_doctors": "По лечащим врачам",
+        "dept_data_management": "Управление данными отделения",
+        "export_csv_btn": "Экспорт в CSV (таблица)",
+        "import_csv_btn": "Импорт из CSV",
+        "export_json_btn": "Экспорт в JSON (копия)",
+        // Summary
+        "clinic_summary_analytics": "Сводная аналитика клиники",
+        "clinic_summary_subtitle": "Сравнительные показатели, динамика работы и распределение нагрузки по всей больнице",
+        "occupancy_by_depts": "Заполняемость по отделениям",
+        "patients_by_doctors": "Распределение пациентов по врачам",
+        "depts_comparison_table": "Сравнительная таблица отделений",
+        "department": "Отделение",
+        "free_beds_label": "Свободно мест",
+        "occupancy_percent": "Загрузка %",
+        "active_bookings_header": "Активных броней",
+        // Admin
+        "admin_panel_title": "Панель администратора",
+        "admin_panel_subtitle": "Управление структурой клиники, палатами, койками, штатом врачей и общим бэкапом",
+        "depts_structure": "Структура отделений",
+        "new_dept_btn": "+ Новое отделение",
+        "name_header": "Название",
+        "identifier_header": "Идентификатор",
+        "wards_header": "Палаты",
+        "beds_per_ward_header": "Коек на палату",
+        "theme_color_header": "Цвет темы",
+        "doctors_header": "Врачи",
+        "actions_header": "Действия",
+        "backup_and_reset_header": "Единое резервное копирование и сброс",
+        "backup_notice": "Резервная копия содержит структуру всех отделений, список активных пациентов, архив выписанных, брони и историю переводов. Сохраняйте данный файл регулярно.",
+        "global_backup_btn": "Глобальный бэкап (JSON)",
+        "restore_backup_btn": "Восстановить бэкап (JSON)",
+        "reset_all_data_btn": "Сбросить ВСЕ данные клиники",
+        "transfer_history_header": "История переводов пациентов",
+        "transfer_date_header": "Дата перевода",
+        "patient_name_header": "ФИО пациента",
+        "from_header": "Откуда",
+        "to_header": "Куда",
+        "transfer_reason_header": "Причина перевода",
+        // Feedback
+        "feedback_widget_title": "Оставить отзыв",
+        "feedback_widget_subtitle": "Ваши отзывы и предложения отправляются напрямую администрации в Telegram.",
+        "feedback_success_title": "Спасибо за отзыв!",
+        "feedback_success_desc": "Ваше сообщение успешно отправлено.",
+        "feedback_write_more": "Написать еще",
+        "feedback_type_label": "Тип обращения",
+        "feedback_type_suggestion": "Предложение",
+        "feedback_type_bug": "Ошибка",
+        "feedback_type_question": "Вопрос",
+        "feedback_type_thanks": "Спасибо!",
+        "feedback_rating_select": "Выберите звезды для оценки",
+        "feedback_name_label": "Ваше имя *",
+        "feedback_name_placeholder": "Введите ваше имя",
+        "feedback_text_label": "Ваш отзыв *",
+        "feedback_text_placeholder": "Опишите ваши предложения или возникшую ошибку...",
+        "feedback_submit_btn": "Отправить отзыв",
+        "feedback_warning_bot": "Внимание! Telegram-бот не настроен.",
+        "feedback_settings_title": "Настройки Telegram",
+        "feedback_settings_desc": "Укажите данные вашего бота для приема отзывов клиники:",
+        "feedback_bot_token": "Токен бота *",
+        "feedback_chat_id": "ID чата / Получателя *",
+        "feedback_test_btn": "Проверить",
+        "feedback_save_btn": "Сохранить",
+        "feedback_cancel_btn": "Отмена",
+        "feedback_instructions_title": "Краткая инструкция по созданию бота:",
+        "feedback_instruction_1": "Найдите бота <a href=\"https://t.me/BotFather\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@BotFather</a> в Telegram и отправьте <code>/newbot</code>.",
+        "feedback_instruction_2": "Скопируйте выданный API Token в поле \"Токен бота\" выше.",
+        "feedback_instruction_3": "Перейдите в свой бот и обязательно нажмите **Start** (/start).",
+        "feedback_instruction_4": "Узнайте свой ID, написав боту <a href=\"https://t.me/userinfobot\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@userinfobot</a>. Введите его в поле \"ID чата\".",
+        // Modals & Popups
+        "modal_admission_title": "Поступление пациента",
+        "label_patient_name": "ФИО пациента *",
+        "placeholder_patient_name": "Иванов Иван Иванович",
+        "label_room": "Палата *",
+        "label_bed": "Койка *",
+        "label_admission_date": "Дата поступления *",
+        "label_discharge_date": "План. дата выписки",
+        "label_doctor": "Лечащий врач *",
+        "select_doctor_default": "— Выберите врача —",
+        "label_note": "Диагноз / Примечание",
+        "placeholder_note": "Краткие медицинские отметки (без смайлов)",
+        "btn_save": "Сохранить",
+        "btn_cancel": "Отмена",
+        "modal_booking_title": "Бронь койки",
+        "label_booking_date": "Дата планируемого поступления *",
+        "select_doctor_no_assign": "— Не назначен —",
+        "label_booking_note": "Телефон / Примечание",
+        "placeholder_booking_note": "Контактный телефон, примечание",
+        "modal_transfer_title": "Перевод пациента в другое отделение",
+        "label_transfer_patient": "Пациент",
+        "label_current_placement": "Текущее размещение",
+        "label_target_dept": "Целевое отделение *",
+        "label_target_room": "Целевая палата *",
+        "label_transfer_reason": "Обоснование перевода *",
+        "placeholder_transfer_reason": "Укажите причину перевода пациента",
+        "modal_dept_admin_title": "Настройка отделения",
+        "label_dept_id": "Уникальный ID отделения (только латиница, например: cardio) *",
+        "label_dept_name": "Название отделения *",
+        "placeholder_dept_name": "Кардиология",
+        "label_dept_room_start": "Начальный номер палаты *",
+        "label_dept_room_end": "Конечный номер палаты *",
+        "label_dept_beds": "Коек в одной палате *",
+        "label_dept_color": "Цветовая схема (Hex) *",
+        "label_dept_doctors": "Список врачей (через запятую) *",
+        "placeholder_dept_doctors": "Доктор А., Доктор Б.",
+        "btn_save_dept": "Сохранить отделение",
+        "btn_transfer": "Перевести",
+        // Interactive Alerts & Messages
+        "alert_select_dept": "Пожалуйста, выберите отделение на главном дашборде",
+        "alert_fill_reason": "Пожалуйста, укажите медицинское обоснование или причину перевода",
+        "alert_bed_occupied": "Выбранная койка уже занята другим пациентом",
+        "alert_placement_same": "Целевое размещение совпадает с текущим",
+        "alert_transfer_success": "Пациент успешно переведен",
+        "alert_fill_dept_name": "Укажите название отделения",
+        "alert_fill_rooms": "Укажите корректный диапазон палат",
+        "alert_beds_min": "Количество коек должно быть не менее 1",
+        "alert_fill_doctors": "Укажите список лечащих врачей",
+        "alert_dept_id_format": "ID отделения должен содержать только латинские буквы и цифры",
+        "alert_dept_exists": "Отделение с таким ID уже существует",
+        "alert_dept_saved": "Данные отделения успешно сохранены",
+        "alert_reset_confirm_1": "Вы действительно хотите удалить ВСЕ данные клиники? Это действие необратимо.",
+        "alert_reset_confirm_2": "Все пациенты, брони, архивы выписанных и списки врачей будут стерты. Подтверждаете?",
+        "alert_reset_success": "Система полностью сброшена к начальным настройкам.",
+        "alert_backup_saved": "Глобальная резервная копия всей клиники сохранена.",
+        "alert_backup_error": "Ошибка при экспорте бэкапа: ",
+        "alert_restore_confirm": "⚠️ Все текущие данные клиники будут полностью перезаписаны данными из файла. Продолжить?",
+        "alert_restore_invalid": "Некорректный формат файла. Отсутствует база пациентов.",
+        "alert_restore_legacy": "Обнаружен старый файл кардиологического пилота. Успешно мигрировано в отделение «Кардиология».",
+        "alert_restore_success": "Глобальный бэкап успешно восстановлен.",
+        "alert_dept_backup_saved": "Резервная копия отделения сохранена.",
+        "alert_dept_export_error": "Ошибка при экспорте JSON отделения: ",
+        "alert_dept_no_data": "Нет данных для экспорта в этом отделении.",
+        "alert_csv_generated": "Данные отделения экспортированы: {n} строк.",
+        "alert_csv_invalid_file": "Файл CSV пуст или поврежден",
+        "alert_csv_import_confirm": "Импортировать {n} строк в отделение? Старые данные этого отделения будут перезаписаны.",
+        "alert_csv_header_error": "Некорректная структура заголовков CSV",
+        "alert_csv_import_success": "Успешно импортированы данные отделения.",
+        "alert_feedback_fill_settings": "Заполните настройки Telegram-бота!",
+        "alert_feedback_stars": "Пожалуйста, выберите оценку звездами!",
+        "alert_feedback_success": "Отзыв успешно отправлен!",
+        "alert_feedback_settings_saved": "Настройки успешно сохранены!",
+        "alert_feedback_test_success": "Подключение успешно! Проверьте ваш Telegram-бот.",
+        "alert_feedback_test_error": "Ошибка: ",
+        "alert_feedback_network_error": "Ошибка сети. Проверьте подключение.",
+        "alert_patient_name_required": "Введите ФИО пациента",
+        "alert_admission_date_required": "Укажите дату поступления",
+        "alert_doctor_required": "Выберите лечащего врача",
+        "alert_booking_date_required": "Укажите плановую дату заезда",
+        "alert_booking_conflict": "На данную койку уже создана бронь: ",
+        "alert_booking_delete_confirm": "Вы действительно хотите удалить бронь: ",
+        "alert_booking_convert_confirm": "Госпитализировать пациента на койку в палату?",
+        "alert_booking_convert_success": "Пациент госпитализирован. Внесите плановую дату выписки при необходимости.",
+        "alert_discharge_confirm": "Выписать пациента: ",
+        "alert_discharge_upcoming_booking": "💡 Обратите внимание! На освободившуюся койку есть бронь: {name} (дата: {date}). Перейдите во вкладку «Бронь», чтобы принять пациента.",
+        "alert_patient_found": "Найден пациент: {name} в отделении {dept}, Палата {room}, Койка {bed}",
+        "doctors_no_added": "Врачи не добавлены",
+        "admissions_label": "Поступлений",
+        "discharges_label": "Выписок",
+        "days_short": "дн.",
+        "total_beds_label": "Всего коек",
+        "enter_dept": "Войти →",
+        "total_beds_occupied": "Коек всего / занято:",
+        "chart_beds_occupied": "Занято коек",
+        "chart_beds_free": "Свободно коек",
+        "chart_patients_per_doctor": "Пациентов у врача",
+        "btn_edit_admin": "Редактировать",
+        "admin_no_transfers_yet": "Переводов еще не производилось",
+        "modal_add_dept_title": "Добавление нового отделения",
+        "transfer_placement_detail": "пал. {room}, койка {bed}",
+        "alert_feedback_invalid_token": "Неверный токен или ID",
+        "feedback_testing_btn_label": "Проверка...",
+        "feedback_sending": "Отправка...",
+        "feedback_rating_text_1": "Очень плохо - 1 звезда 😞",
+        "feedback_rating_text_2": "Неудовлетворительно - 2 звезды 😐",
+        "feedback_rating_text_3": "Удовлетворительно - 3 звезды 🙂",
+        "feedback_rating_text_4": "Хорошо - 4 звезды 🌟",
+        "feedback_rating_text_5": "Отлично - 5 звезд 🔥",
+        "csv_header_type": "Тип",
+        "csv_header_id": "ID",
+        "csv_header_name": "ФИО",
+        "csv_header_room": "Палата",
+        "csv_header_bed": "Койка",
+        "csv_header_adm_date": "Дата поступления",
+        "csv_header_plan_disc": "План. выписка",
+        "csv_header_disc_date": "Дата выписки",
+        "csv_header_days": "Дней",
+        "csv_header_doctor": "Врач",
+        "csv_header_note": "Примечание",
+        "csv_header_status": "Статус",
+        "csv_type_patient": "Пациент",
+        "csv_type_booking": "Бронь",
+        "csv_status_discharged": "Выписан",
+        "csv_status_treating": "На лечении"
+      },
+      en: {
+        // Header
+        "header-logo-title": "Clinical Center",
+        "header-logo-subtitle": "Unified Multidisciplinary System",
+        "search-placeholder": "Global patient search...",
+        "nav-dashboard": "Home",
+        "nav-stats": "Summary",
+        "nav-admin": "Admin",
+        // Dashboard
+        "clinic_title": "Multidisciplinary Medical Center of Therapy",
+        "clinic_subtitle": "Real-time occupancy summary of clinical departments",
+        "total_beds": "Total Beds",
+        "occupied_beds": "Occupied Beds",
+        "free_beds": "Free Places",
+        "occupancy_rate": "Occupancy Rate",
+        "active_bookings": "Active Bookings",
+        "clinic_departments": "Clinic Departments",
+        // Department
+        "back_to_depts": "← Back to Departments",
+        "occupied": "Occupied",
+        "free": "Free",
+        "bookings_label": "Bookings",
+        "discharges_today_label": "Discharges Today",
+        "wards": "Wards",
+        "patients_tab": "Patients",
+        "bookings_tab": "Bookings",
+        "stats_tab": "Statistics",
+        "partially": "Partially",
+        "booking_notice": "Pre-booking of beds. The bed is automatically marked as booked on the planned date.",
+        "new_booking_btn": "+ New Booking",
+        "admissions_calendar": "Admissions Calendar",
+        "calendar_legend": "Admissions / discharges per day (shown in cells)",
+        "monthly_indicators": "Monthly Indicators",
+        "total_admissions": "Total Admissions:",
+        "total_discharges": "Total Discharges:",
+        "currently_treating": "Currently Treating:",
+        "avg_stay_duration": "Average Stay:",
+        "dept_occupancy_load": "Department Load:",
+        "by_attending_doctors": "By Attending Doctors",
+        "dept_data_management": "Department Data Management",
+        "export_csv_btn": "Export to CSV (Table)",
+        "import_csv_btn": "Import from CSV",
+        "export_json_btn": "Export to JSON (Copy)",
+        // Summary
+        "clinic_summary_analytics": "Clinic Summary Analytics",
+        "clinic_summary_subtitle": "Comparative metrics, work dynamics, and load distribution across the hospital",
+        "occupancy_by_depts": "Occupancy by Departments",
+        "patients_by_doctors": "Patient Distribution by Doctors",
+        "depts_comparison_table": "Department Comparison Table",
+        "department": "Department",
+        "free_beds_label": "Free Places",
+        "occupancy_percent": "Occupancy %",
+        "active_bookings_header": "Active Bookings",
+        // Admin
+        "admin_panel_title": "Admin Panel",
+        "admin_panel_subtitle": "Manage clinic structure, wards, beds, doctors staff, and global backup",
+        "depts_structure": "Department Structure",
+        "new_dept_btn": "+ New Department",
+        "name_header": "Name",
+        "identifier_header": "Identifier",
+        "wards_header": "Wards",
+        "beds_per_ward_header": "Beds per Ward",
+        "theme_color_header": "Theme Color",
+        "doctors_header": "Doctors",
+        "actions_header": "Actions",
+        "backup_and_reset_header": "Unified Backup and Reset",
+        "backup_notice": "Backup file contains structure of all departments, active patients list, discharged archive, bookings, and transfer history. Save this file regularly.",
+        "global_backup_btn": "Global Backup (JSON)",
+        "restore_backup_btn": "Restore Backup (JSON)",
+        "reset_all_data_btn": "Reset ALL Clinic Data",
+        "transfer_history_header": "Patient Transfer History",
+        "transfer_date_header": "Transfer Date",
+        "patient_name_header": "Patient Name",
+        "from_header": "From",
+        "to_header": "To",
+        "transfer_reason_header": "Transfer Reason",
+        // Feedback
+        "feedback_widget_title": "Leave a Feedback",
+        "feedback_widget_subtitle": "Your feedback and suggestions are sent directly to the administration in Telegram.",
+        "feedback_success_title": "Thank you for feedback!",
+        "feedback_success_desc": "Your message was successfully sent.",
+        "feedback_write_more": "Write More",
+        "feedback_type_label": "Message Type",
+        "feedback_type_suggestion": "Suggestion",
+        "feedback_type_bug": "Bug",
+        "feedback_type_question": "Question",
+        "feedback_type_thanks": "Thanks!",
+        "feedback_rating_select": "Select stars for rating",
+        "feedback_name_label": "Your Name *",
+        "feedback_name_placeholder": "Enter your name",
+        "feedback_text_label": "Your Feedback *",
+        "feedback_text_placeholder": "Describe your suggestions or the bug...",
+        "feedback_submit_btn": "Send Feedback",
+        "feedback_warning_bot": "Warning! Telegram bot is not configured.",
+        "feedback_settings_title": "Telegram Settings",
+        "feedback_settings_desc": "Enter your bot details to receive clinic feedbacks:",
+        "feedback_bot_token": "Bot Token *",
+        "feedback_chat_id": "Chat ID / Recipient *",
+        "feedback_test_btn": "Test",
+        "feedback_save_btn": "Save",
+        "feedback_cancel_btn": "Cancel",
+        "feedback_instructions_title": "Brief instruction for creating a bot:",
+        "feedback_instruction_1": "Find <a href=\"https://t.me/BotFather\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@BotFather</a> bot on Telegram and send <code>/newbot</code>.",
+        "feedback_instruction_2": "Copy the API Token into the \"Bot Token\" field above.",
+        "feedback_instruction_3": "Go to your bot and press **Start** (/start).",
+        "feedback_instruction_4": "Find out your ID by writing to <a href=\"https://t.me/userinfobot\" target=\"_blank\" style=\"color: var(--primary); font-weight: bold;\">@userinfobot</a>. Enter it in the \"Chat ID\" field.",
+        // Modals & Popups
+        "modal_admission_title": "Patient Admission",
+        "label_patient_name": "Patient Full Name *",
+        "placeholder_patient_name": "Smith John",
+        "label_room": "Ward *",
+        "label_bed": "Bed *",
+        "label_admission_date": "Admission Date *",
+        "label_discharge_date": "Planned Discharge",
+        "label_doctor": "Attending Doctor *",
+        "select_doctor_default": "— Select Doctor —",
+        "label_note": "Diagnosis / Note",
+        "placeholder_note": "Brief medical notes (no smiles)",
+        "btn_save": "Save",
+        "btn_cancel": "Cancel",
+        "modal_booking_title": "Bed Booking",
+        "label_booking_date": "Planned Admission Date *",
+        "select_doctor_no_assign": "— Not Assigned —",
+        "label_booking_note": "Phone / Note",
+        "placeholder_booking_note": "Contact phone, note",
+        "modal_transfer_title": "Transfer Patient to Another Department",
+        "label_transfer_patient": "Patient",
+        "label_current_placement": "Current Placement",
+        "label_target_dept": "Target Department *",
+        "label_target_room": "Target Ward *",
+        "label_transfer_reason": "Transfer Reason *",
+        "placeholder_transfer_reason": "Indicate the reason for transferring the patient",
+        "modal_dept_admin_title": "Department Settings",
+        "label_dept_id": "Unique Department ID (latin only, e.g. cardio) *",
+        "label_dept_name": "Department Name *",
+        "placeholder_dept_name": "Cardiology",
+        "label_dept_room_start": "Start Room Number *",
+        "label_dept_room_end": "End Room Number *",
+        "label_dept_beds": "Beds per Ward *",
+        "label_dept_color": "Theme Color (Hex) *",
+        "label_dept_doctors": "Doctors List (comma separated) *",
+        "placeholder_dept_doctors": "Doctor A., Doctor B.",
+        "btn_save_dept": "Save Department",
+        "btn_transfer": "Transfer",
+        // Interactive Alerts & Messages
+        "alert_select_dept": "Please select a department on the main dashboard",
+        "alert_fill_reason": "Please state a medical reason or justification for the transfer",
+        "alert_bed_occupied": "The selected bed is already occupied by another patient",
+        "alert_placement_same": "Target placement is the same as current",
+        "alert_transfer_success": "Patient successfully transferred",
+        "alert_fill_dept_name": "Specify the name of the department",
+        "alert_fill_rooms": "Specify a valid range of wards",
+        "alert_beds_min": "The number of beds must be at least 1",
+        "alert_fill_doctors": "Specify a list of attending doctors",
+        "alert_dept_id_format": "Department ID must contain only latin letters and numbers",
+        "alert_dept_exists": "Department with this ID already exists",
+        "alert_dept_saved": "Department data successfully saved",
+        "alert_reset_confirm_1": "Are you sure you want to delete ALL clinic data? This action is irreversible.",
+        "alert_reset_confirm_2": "All patients, bookings, discharged archives, and doctors lists will be erased. Confirm?",
+        "alert_reset_success": "The system has been completely reset to initial settings.",
+        "alert_backup_saved": "Global backup of the entire clinic saved.",
+        "alert_backup_error": "Error during backup export: ",
+        "alert_restore_confirm": "⚠️ All current clinic data will be completely overwritten by data from the file. Continue?",
+        "alert_restore_invalid": "Invalid file format. No patient database.",
+        "alert_restore_legacy": "Old cardiology pilot file detected. Successfully migrated to «Cardiology» department.",
+        "alert_restore_success": "Global backup successfully restored.",
+        "alert_dept_backup_saved": "Department backup saved.",
+        "alert_dept_export_error": "Error during department JSON export: ",
+        "alert_dept_no_data": "No data to export in this department.",
+        "alert_csv_generated": "Department data exported: {n} rows.",
+        "alert_csv_invalid_file": "CSV file is empty or corrupted",
+        "alert_csv_import_confirm": "Import {n} rows into the department? Old data of this department will be overwritten.",
+        "alert_csv_header_error": "Incorrect CSV headers structure",
+        "alert_csv_import_success": "Successfully imported department data.",
+        "alert_feedback_fill_settings": "Fill in the Telegram bot settings!",
+        "alert_feedback_stars": "Please choose a star rating!",
+        "alert_feedback_success": "Feedback successfully sent!",
+        "alert_feedback_settings_saved": "Settings successfully saved!",
+        "alert_feedback_test_success": "Connection successful! Check your Telegram bot.",
+        "alert_feedback_test_error": "Error: ",
+        "alert_feedback_network_error": "Network error. Check your connection.",
+        "alert_patient_name_required": "Enter patient full name",
+        "alert_admission_date_required": "Specify admission date",
+        "alert_doctor_required": "Select attending doctor",
+        "alert_booking_date_required": "Specify planned admission date",
+        "alert_booking_conflict": "A booking is already created for this bed on: ",
+        "alert_booking_delete_confirm": "Are you sure you want to delete the booking: ",
+        "alert_booking_convert_confirm": "Hospitalize the patient in the ward, bed?",
+        "alert_booking_convert_success": "Patient hospitalized. Add planned discharge date if necessary.",
+        "alert_discharge_confirm": "Discharge patient: ",
+        "alert_discharge_upcoming_booking": "💡 Note! There is a booking for the vacated bed: {name} (date: {date}). Go to 'Bookings' tab to accept the patient.",
+        "alert_patient_found": "Patient found: {name} in department {dept}, Ward {room}, Bed {bed}",
+        "doctors_no_added": "No doctors added",
+        "admissions_label": "Admissions",
+        "discharges_label": "Discharges",
+        "days_short": "d.",
+        "total_beds_label": "Total Beds",
+        "enter_dept": "Enter →",
+        "total_beds_occupied": "Total / occupied beds:",
+        "chart_beds_occupied": "Occupied Beds",
+        "chart_beds_free": "Free Beds",
+        "chart_patients_per_doctor": "Patients per Doctor",
+        "btn_edit_admin": "Edit",
+        "admin_no_transfers_yet": "No transfers have been made yet",
+        "modal_add_dept_title": "Add New Department",
+        "transfer_placement_detail": "ward {room}, bed {bed}",
+        "alert_feedback_invalid_token": "Invalid token or ID",
+        "feedback_testing_btn_label": "Testing...",
+        "feedback_sending": "Sending...",
+        "feedback_rating_text_1": "Very bad - 1 star 😞",
+        "feedback_rating_text_2": "Unsatisfactory - 2 stars 😐",
+        "feedback_rating_text_3": "Satisfactory - 3 stars 🙂",
+        "feedback_rating_text_4": "Good - 4 stars 🌟",
+        "feedback_rating_text_5": "Excellent - 5 stars 🔥",
+        "csv_header_type": "Type",
+        "csv_header_id": "ID",
+        "csv_header_name": "Full Name",
+        "csv_header_room": "Ward",
+        "csv_header_bed": "Bed",
+        "csv_header_adm_date": "Admission Date",
+        "csv_header_plan_disc": "Planned Discharge",
+        "csv_header_disc_date": "Discharge Date",
+        "csv_header_days": "Days",
+        "csv_header_doctor": "Doctor",
+        "csv_header_note": "Note",
+        "csv_header_status": "Status",
+        "csv_type_patient": "Patient",
+        "csv_type_booking": "Booking",
+        "csv_status_discharged": "Discharged",
+        "csv_status_treating": "Treating"
+      }
+    };
+
+
+    let currentLang = localStorage.getItem('clinic_lang') || 'ru';
+
+    function t(key, replacements = {}) {
+      const langDict = TRANSLATIONS[currentLang] || TRANSLATIONS['ru'];
+      let text = langDict[key] || TRANSLATIONS['ru'][key] || key;
+      for (let placeholder in replacements) {
+        text = text.replace(new RegExp(`{${placeholder}}`, 'g'), replacements[placeholder]);
+      }
+      return text;
+    }
+
+    function tDept(dept) {
+      if (!dept) return '';
+      const standardDepts = {
+        'cardio': { uz: 'Kardiologiya', ru: 'Кардиология', en: 'Cardiology' },
+        'pulmo': { uz: 'Pulmonologiya', ru: 'Пульмонология', en: 'Pulmonology' },
+        'rheum': { uz: 'Revmatologiya', ru: 'Ревматология', en: 'Rheumatology' },
+        'gastro': { uz: 'Gastroenterologiya', ru: 'Гастроэнтерология', en: 'Gastroenterology' },
+        'neuro': { uz: 'Nevrologiya', ru: 'Неврология', en: 'Neurology' },
+        'cardio_rehab': { uz: 'Kardioreabilitatsiya', ru: 'Кардиореабилитация', en: 'Cardiorehabilitation' },
+        'therapy': { uz: 'Terapiya', ru: 'Терапия', en: 'Therapy' }
+      };
+      
+      if (typeof dept === 'object') {
+        const id = dept.id;
+        if (standardDepts[id]) {
+          return standardDepts[id][currentLang] || dept.name;
+        }
+        return dept.name;
+      } else if (typeof dept === 'string') {
+        if (standardDepts[dept]) {
+          return standardDepts[dept][currentLang];
+        }
+        const found = data && data.departments ? data.departments.find(d => d.id === dept) : null;
+        return found ? found.name : dept;
+      }
+      return dept;
+    }
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('clinic_lang', lang);
+      
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === lang) {
+          btn.classList.add('active');
+        }
+      });
+      
+      applyLanguage();
+      
+      const hash = window.location.hash || '#dashboard';
+      if (hash === '#dashboard') {
+        renderMainDashboard();
+      } else if (hash === '#stats') {
+        renderClinicStats();
+      } else if (hash === '#admin') {
+        renderAdminPanel();
+      } else if (hash.startsWith('#dept-')) {
+        renderActiveDepartment();
+      }
+    }
+
+    function applyLanguage() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+      });
+      
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        el.innerHTML = t(key);
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.setAttribute('placeholder', t(key));
+      });
+
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        el.setAttribute('title', t(key));
+      });
+      
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+      });
+      
+      document.documentElement.lang = currentLang;
+    }
+
     // Ключи локального хранилища
     const UNIFIED_STORAGE_KEY = 'unified_clinic_data_v1';
     const LEGACY_STORAGE_KEY = 'cardiology_data_v3';
@@ -1906,6 +3247,14 @@
     // Инициализация при запуске страницы
     window.addEventListener('DOMContentLoaded', () => {
       data = loadAndMigrateData();
+      applyLanguage();
+      
+      // Load saved feedback name
+      const savedFeedbackName = localStorage.getItem('clinic_feedback_user_name');
+      if (savedFeedbackName) {
+        const nameInput = document.getElementById('widget-user-name');
+        if (nameInput) nameInput.value = savedFeedbackName;
+      }
       
       // Запуск роутера
       window.addEventListener('hashchange', router);
@@ -2336,7 +3685,8 @@
     function formatDate(s) {
       if (!s) return '';
       const d = new Date(s);
-      return d.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'});
+      const locales = { uz: 'uz-UZ', ru: 'ru-RU', en: 'en-US' };
+      return d.toLocaleDateString(locales[currentLang] || 'ru-RU', {day:'2-digit', month:'2-digit'});
     }
 
     function daysBetween(start, end) {
@@ -2410,27 +3760,27 @@
         card.innerHTML = `
           <div>
             <div class="dept-card-header">
-              <div class="dept-card-title">${d.name}</div>
+              <div class="dept-card-title">${tDept(d)}</div>
               <div class="dept-indicator" style="background: ${d.color}"></div>
             </div>
             <div class="dept-card-stats">
-              <div style="font-size: 13px; color: var(--text-secondary);">Занятость:</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">${t('occupancy_rate')}:</div>
               <div class="dept-progress-container">
                 <div class="dept-progress-bar" style="width: ${deptLoad}%; background: ${d.color}"></div>
               </div>
               <div class="dept-stats-row">
-                <span>Коек всего / занято:</span>
+                <span>${t('total_beds_occupied')}</span>
                 <span class="dept-stats-number">${capacity} / ${deptPatients} (${deptLoad}%)</span>
               </div>
               <div class="dept-stats-row">
-                <span>Свободно мест:</span>
+                <span>${t('free_beds_label')}:</span>
                 <span class="dept-stats-number" style="color: ${deptFree > 0 ? '#059669' : '#ef4444'}">${deptFree}</span>
               </div>
             </div>
           </div>
           <div class="dept-card-footer">
-            <span>Брони: ${deptBookings} · Выписки: ${dischargesToday}</span>
-            <span class="dept-action-link" style="color: ${d.color}">Войти →</span>
+            <span>${t('bookings_label')}: ${deptBookings} · ${t('discharges_label')}: ${dischargesToday}</span>
+            <span class="dept-action-link" style="color: ${d.color}">${t('enter_dept')}</span>
           </div>
         `;
 
@@ -2464,10 +3814,28 @@
       if (!dept) return;
 
       // Обновляем заголовки и тему
-      document.getElementById('deptTitle').textContent = `${dept.name} отделение`;
+      let deptTitleText = '';
+      if (currentLang === 'uz') {
+        deptTitleText = `${tDept(dept)} bo'limi`;
+      } else if (currentLang === 'en') {
+        deptTitleText = `${tDept(dept)} Department`;
+      } else {
+        deptTitleText = `${tDept(dept)} отделение`;
+      }
+      document.getElementById('deptTitle').textContent = deptTitleText;
+
       const roomsCount = dept.roomEnd - dept.roomStart + 1;
       const capacity = roomsCount * dept.bedsPerRoom;
-      document.getElementById('deptSubtitle').textContent = `Палаты ${dept.roomStart}–${dept.roomEnd} · ${capacity} коек`;
+      
+      let subtitleText = '';
+      if (currentLang === 'uz') {
+        subtitleText = `Palatalar ${dept.roomStart}–${dept.roomEnd} · ${capacity} ta koyka`;
+      } else if (currentLang === 'en') {
+        subtitleText = `Wards ${dept.roomStart}–${dept.roomEnd} · ${capacity} beds`;
+      } else {
+        subtitleText = `Палаты ${dept.roomStart}–${dept.roomEnd} · ${capacity} коек`;
+      }
+      document.getElementById('deptSubtitle').textContent = subtitleText;
 
       const deptImages = {
         cardio: 'dept_cardio.png',
@@ -2520,6 +3888,36 @@
       const grid = document.getElementById('roomsGrid');
       grid.innerHTML = '';
 
+      const txt = {
+        uz: {
+          bedChar: 'K',
+          noDoctor: 'shifokor belgilanmagan',
+          daysShort: 'kun.',
+          bedFree: b => `+ Koyka ${b} bo'sh`,
+          ward: 'Palata'
+        },
+        ru: {
+          bedChar: 'К',
+          noDoctor: 'врач не указан',
+          daysShort: 'дн.',
+          bedFree: b => `+ Койка ${b} свободна`,
+          ward: 'Палата'
+        },
+        en: {
+          bedChar: 'B',
+          noDoctor: 'doctor not specified',
+          daysShort: 'd.',
+          bedFree: b => `+ Bed ${b} is free`,
+          ward: 'Ward'
+        }
+      }[currentLang] || {
+        bedChar: 'К',
+        noDoctor: 'врач не указан',
+        daysShort: 'дн.',
+        bedFree: b => `+ Койка ${b} свободна`,
+        ward: 'Палата'
+      };
+
       for (let r = dept.roomStart; r <= dept.roomEnd; r++) {
         let roomBedsHtml = '';
         let occupiedCount = 0;
@@ -2541,16 +3939,16 @@
             const days = daysBetween(occupant.admissionDate);
             roomBedsHtml += `
               <div class="bed occupied" onclick="editPatient(${occupant.id})">
-                <div class="bed-patient-name">К${b}: ${occupant.name}</div>
-                <div class="bed-info">${occupant.doctor || 'врач не указан'}</div>
-                <span class="days-badge">${days} дн.</span>
+                <div class="bed-patient-name">${txt.bedChar}${b}: ${occupant.name}</div>
+                <div class="bed-info">${occupant.doctor || txt.noDoctor}</div>
+                <span class="days-badge">${days} ${txt.daysShort}</span>
                 ${bookingHtml}
               </div>
             `;
           } else {
             roomBedsHtml += `
               <div class="bed free" onclick="quickAdd(${r}, ${b})">
-                + Койка ${b} свободна
+                ${txt.bedFree(b)}
                 ${bookingHtml}
               </div>
             `;
@@ -2570,7 +3968,7 @@
         card.className = 'room-card ' + cls;
         card.innerHTML = `
           <div class="room-number">
-            Палата ${r}
+            ${txt.ward} ${r}
             <span class="room-status-dot" style="background:${dotColor}"></span>
           </div>
           ${roomBedsHtml}
@@ -2582,8 +3980,54 @@
     // 4.2 Пациенты отделения
     function renderDeptPatients(dept, activePatients) {
       const list = document.getElementById('patientList');
+      
+      const txt = {
+        uz: {
+          empty: 'Bo\'limda faol bemorlar yo\'q',
+          ward: 'Palata',
+          bed: 'koyka',
+          onTreatment: 'Davolanmoqda',
+          daysShort: 'kun',
+          attendingDoctor: 'Davolovchi shifokor',
+          notSpecified: 'Belgilanmagan',
+          admitted: 'Qabul qilindi',
+          plannedDischarge: 'Rejalashtirilgan chiqish',
+          note: 'Izoh',
+          btnTransfer: 'O\'tkazish',
+          btnDischarge: 'Javob berish'
+        },
+        ru: {
+          empty: 'Нет активных пациентов в отделении',
+          ward: 'Палата',
+          bed: 'койка',
+          onTreatment: 'На лечении',
+          daysShort: 'дн.',
+          attendingDoctor: 'Лечащий врач',
+          notSpecified: 'Не указан',
+          admitted: 'Поступил',
+          plannedDischarge: 'План выписки',
+          note: 'Примечание',
+          btnTransfer: 'Перевести',
+          btnDischarge: 'Выписать'
+        },
+        en: {
+          empty: 'No active patients in the department',
+          ward: 'Ward',
+          bed: 'bed',
+          onTreatment: 'On treatment',
+          daysShort: 'd.',
+          attendingDoctor: 'Attending doctor',
+          notSpecified: 'Not specified',
+          admitted: 'Admitted',
+          plannedDischarge: 'Planned discharge',
+          note: 'Note',
+          btnTransfer: 'Transfer',
+          btnDischarge: 'Discharge'
+        }
+      }[currentLang] || {};
+
       if (activePatients.length === 0) {
-        list.innerHTML = '<div class="empty-state">Нет активных пациентов в отделении</div>';
+        list.innerHTML = `<div class="empty-state">${txt.empty}</div>`;
         return;
       }
 
@@ -2599,16 +4043,16 @@
           <div style="flex: 1; min-width: 0;">
             <div class="patient-name">${p.name}</div>
             <div class="patient-details">
-              Палата ${p.room}, койка ${p.bed} · На лечении: ${days} дн.<br>
-              Лечащий врач: ${p.doctor || 'Не указан'} · Поступил: ${formatDate(p.admissionDate)}
-              ${p.plannedDischarge ? ' · План выписки: ' + formatDate(p.plannedDischarge) : ''}
-              ${p.note ? '<br><span style="color:var(--text); font-style:normal;">Примечание: ' + p.note + '</span>' : ''}
+              ${txt.ward} ${p.room}, ${txt.bed} ${p.bed} · ${txt.onTreatment}: ${days} ${txt.daysShort}<br>
+              ${txt.attendingDoctor}: ${p.doctor || txt.notSpecified} · ${txt.admitted}: ${formatDate(p.admissionDate)}
+              ${p.plannedDischarge ? ' · ' + txt.plannedDischarge + ': ' + formatDate(p.plannedDischarge) : ''}
+              ${p.note ? '<br><span style="color:var(--text); font-style:normal;">' + txt.note + ': ' + p.note + '</span>' : ''}
             </div>
           </div>
           <div class="patient-actions">
             <button class="btn-small btn-edit" onclick="editPatient(${p.id})">✏️</button>
-            <button class="btn-small btn-transfer" onclick="openTransferModal(${p.id})">Перевести</button>
-            <button class="btn-small btn-discharge" onclick="dischargePatient(${p.id})">Выписать</button>
+            <button class="btn-small btn-transfer" onclick="openTransferModal(${p.id})">${txt.btnTransfer}</button>
+            <button class="btn-small btn-discharge" onclick="dischargePatient(${p.id})">${txt.btnDischarge}</button>
           </div>
         `;
         list.appendChild(item);
@@ -2620,8 +4064,47 @@
       const list = document.getElementById('bookingList');
       const deptBookings = data.bookings.filter(b => b.departmentId === dept.id);
 
+      const txt = {
+        uz: {
+          empty: 'Bo\'limda rejalashtirilgan bronlar yo\'q',
+          ward: 'Palata',
+          bed: 'koyka',
+          planned: 'Rejalashtirilgan',
+          inDays: (d) => `(${d} kundan keyin)`,
+          doctor: 'Shifokor',
+          note: 'Izoh',
+          btnAccept: 'Qabul qilish',
+          occupiedWarning: (name) => `⚠️ Koyka hozirda band: ${name}`,
+          occupiedInfo: (name) => `ℹ️ Hozirda koykada yotibdi: ${name}`
+        },
+        ru: {
+          empty: 'Нет запланированных броней в отделении',
+          ward: 'Палата',
+          bed: 'койка',
+          planned: 'Планируется',
+          inDays: (d) => `(через ${d} дн.)`,
+          doctor: 'Врач',
+          note: 'Примечание',
+          btnAccept: 'Принять',
+          occupiedWarning: (name) => `⚠️ Койка сейчас занята: ${name}`,
+          occupiedInfo: (name) => `ℹ️ Сейчас на койке лежит: ${name}`
+        },
+        en: {
+          empty: 'No planned bookings in the department',
+          ward: 'Ward',
+          bed: 'bed',
+          planned: 'Planned',
+          inDays: (d) => `(in ${d} d.)`,
+          doctor: 'Doctor',
+          note: 'Note',
+          btnAccept: 'Accept',
+          occupiedWarning: (name) => `⚠️ Bed is currently occupied by: ${name}`,
+          occupiedInfo: (name) => `ℹ️ Bed is currently occupied by: ${name}`
+        }
+      }[currentLang] || {};
+
       if (deptBookings.length === 0) {
-        list.innerHTML = '<div class="empty-state">Нет запланированных броней в отделении</div>';
+        list.innerHTML = `<div class="empty-state">${txt.empty}</div>`;
         return;
       }
 
@@ -2634,9 +4117,9 @@
         
         let warning = '';
         if (occupant && b.date <= today) {
-          warning = `<div style="color:#ef4444; font-size:11px; margin-top:3px; font-weight:bold;">⚠️ Койка сейчас занята: ${occupant.name}</div>`;
+          warning = `<div style="color:#ef4444; font-size:11px; margin-top:3px; font-weight:bold;">${txt.occupiedWarning(occupant.name)}</div>`;
         } else if (occupant) {
-          warning = `<div style="color:#d97706; font-size:11px; margin-top:3px;">ℹ️ Сейчас на койке лежит: ${occupant.name}</div>`;
+          warning = `<div style="color:#d97706; font-size:11px; margin-top:3px;">${txt.occupiedInfo(occupant.name)}</div>`;
         }
 
         return `
@@ -2644,15 +4127,15 @@
             <div class="booking-info">
               <div class="booking-name">${b.name}</div>
               <div class="booking-meta">
-                Палата ${b.room}, койка ${b.bed} · Планируется ${formatDate(b.date)} ${b.date >= today ? '(через ' + daysLeft + ' дн.)' : ''}
-                ${b.doctor ? '<br>Врач: ' + b.doctor : ''}
-                ${b.note ? '<br>Примечание: ' + b.note : ''}
+                ${txt.ward} ${b.room}, ${txt.bed} ${b.bed} · ${txt.planned} ${formatDate(b.date)} ${b.date >= today ? txt.inDays(daysLeft) : ''}
+                ${b.doctor ? '<br>' + txt.doctor + ': ' + b.doctor : ''}
+                ${b.note ? '<br>' + txt.note + ': ' + b.note : ''}
               </div>
               ${warning}
             </div>
             <div class="patient-actions">
               <button class="btn-small btn-edit" onclick="editBooking(${b.id})">✏️</button>
-              <button class="btn-small btn-discharge" onclick="convertBookingToPatient(${b.id})">Принять</button>
+              <button class="btn-small btn-discharge" onclick="convertBookingToPatient(${b.id})">${txt.btnAccept}</button>
               <button class="btn-small btn-delete" onclick="deleteBooking(${b.id})">✕</button>
             </div>
           </div>
@@ -2684,7 +4167,7 @@
       document.getElementById('statAdmissions').textContent = admissions;
       document.getElementById('statDischarges').textContent = discharges;
       document.getElementById('statCurrent').textContent = current;
-      document.getElementById('statAvgDays').textContent = avgDays + ' дн.';
+      document.getElementById('statAvgDays').textContent = avgDays + ' ' + (currentLang === 'uz' ? 'kun' : currentLang === 'en' ? 'd.' : 'дн.');
       document.getElementById('statLoad').textContent = load + '%';
 
       // Статистика врачей отделения
@@ -2699,10 +4182,17 @@
       });
 
       const docDiv = document.getElementById('doctorStats');
+      
+      const txt = {
+        uz: { admissions: 'Qabullar', discharges: 'Chiqishlar' },
+        ru: { admissions: 'Поступлений', discharges: 'Выписок' },
+        en: { admissions: 'Admissions', discharges: 'Discharges' }
+      }[currentLang] || {};
+
       docDiv.innerHTML = Object.keys(doctorMap).length === 0
-        ? '<div style="color:var(--text-tertiary); font-size:13px; font-style:italic;">Врачи не добавлены</div>'
+        ? `<div style="color:var(--text-tertiary); font-size:13px; font-style:italic;">${t('doctors_no_added')}</div>`
         : Object.entries(doctorMap).map(([name, s]) =>
-          `<div class="stat-row"><span>${name}</span><span>Поступлений: <strong>${s.admissions}</strong> · Выписок: <strong>${s.discharges}</strong></span></div>`
+          `<div class="stat-row"><span>${name}</span><span>${txt.admissions}: <strong>${s.admissions}</strong> · ${txt.discharges}: <strong>${s.discharges}</strong></span></div>`
         ).join('');
 
       renderCalendar();
@@ -2720,7 +4210,17 @@
 
       const now = new Date();
       const shown = new Date(now.getFullYear(), now.getMonth() + calMonthOffset, 1);
-      const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      
+      const months = {
+        uz: ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'],
+        ru: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+        en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+      }[currentLang] || {
+        uz: ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'],
+        ru: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+        en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+      }.ru;
+
       document.getElementById('calMonth').textContent = `${months[shown.getMonth()]} ${shown.getFullYear()}`;
 
       const firstDay = new Date(shown.getFullYear(), shown.getMonth(), 1);
@@ -2732,7 +4232,16 @@
       const todayStrVal = todayStr();
       const allPatients = [...data.patients, ...data.archive].filter(p => p.departmentId === dept.id);
 
-      const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+      const weekdays = {
+        uz: ['Du','Se','Ch','Pa','Ju','Sh','Ya'],
+        ru: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+        en: ['Mo','Tu','We','Th','Fr','Sa','Su']
+      }[currentLang] || {
+        uz: ['Du','Se','Ch','Pa','Ju','Sh','Ya'],
+        ru: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+        en: ['Mo','Tu','We','Th','Fr','Sa','Su']
+      }.ru;
+
       let html = weekdays.map(w => `<div class="cal-weekday">${w}</div>`).join('');
 
       for (let i = 0; i < startWeekday; i++) {
@@ -2766,6 +4275,14 @@
       const val = document.getElementById('globalSearch').value.trim().toLowerCase();
       const dropdown = document.getElementById('searchResults');
 
+      const txt = {
+        uz: { noPatients: 'Bemorlar topilmadi', unknown: 'Noma\'lum', ward: 'Palata', bed: 'koyka', doctor: 'Shifokor' },
+        ru: { noPatients: 'Пациенты не найдены', unknown: 'Неизвестно', ward: 'Палата', bed: 'койка', doctor: 'Врач' },
+        en: { noPatients: 'Patients not found', unknown: 'Unknown', ward: 'Ward', bed: 'bed', doctor: 'Doctor' }
+      }[currentLang] || {
+        noPatients: 'Пациенты не найдены', unknown: 'Неизвестно', ward: 'Палата', bed: 'койка', doctor: 'Врач'
+      };
+
       if (val.length < 1) {
         dropdown.innerHTML = '';
         dropdown.classList.remove('active');
@@ -2775,7 +4292,7 @@
       const activePatients = data.patients.filter(p => !p.dischargedAt && p.name.toLowerCase().includes(val));
       
       if (activePatients.length === 0) {
-        dropdown.innerHTML = '<div style="padding: 12px; font-size:14px; text-align:center; color:var(--text-tertiary); font-style:italic;">Пациенты не найдены</div>';
+        dropdown.innerHTML = `<div style="padding: 12px; font-size:14px; text-align:center; color:var(--text-tertiary); font-style:italic;">${txt.noPatients}</div>`;
         dropdown.classList.add('active');
         return;
       }
@@ -2783,7 +4300,7 @@
       dropdown.innerHTML = '';
       activePatients.forEach(p => {
         const dept = data.departments.find(d => d.id === p.departmentId);
-        const deptName = dept ? dept.name : 'Неизвестно';
+        const deptName = dept ? tDept(dept) : txt.unknown;
         const deptColor = dept ? dept.color : 'gray';
 
         const row = document.createElement('div');
@@ -2795,14 +4312,14 @@
           setDeptView('rooms');
           // Прокрутка и подсветка палаты/койки
           setTimeout(() => {
-            alert(`Найден пациент: ${p.name} в отделении ${deptName}, Палата ${p.room}, Койка ${p.bed}`);
+            alert(t('alert_patient_found', {name: p.name, dept: deptName, room: p.room, bed: p.bed}));
           }, 350);
         };
 
         row.innerHTML = `
           <div class="search-result-info">
             <div class="search-result-name">${p.name}</div>
-            <div class="search-result-meta">Палата ${p.room}, койка ${p.bed} · Врач: ${p.doctor}</div>
+            <div class="search-result-meta">${txt.ward} ${p.room}, ${txt.bed} ${p.bed} · ${txt.doctor}: ${p.doctor}</div>
           </div>
           <span class="search-dept-badge" style="background: ${deptColor}">${deptName}</span>
         `;
@@ -2826,15 +4343,23 @@
 
       const dept = data.departments.find(d => d.id === p.departmentId);
 
+      const txt = {
+        uz: { ward: 'Palata', bed: 'koyka' },
+        ru: { ward: 'Палата', bed: 'койка' },
+        en: { ward: 'Ward', bed: 'bed' }
+      }[currentLang] || {
+        ward: 'Палата', bed: 'койка'
+      };
+
       document.getElementById('transferPatientId').value = patientId;
       document.getElementById('transferPatientName').value = p.name;
-      document.getElementById('transferCurrentPlacement').value = `${dept ? dept.name : ''}, Палата ${p.room}, Койка ${p.bed}`;
+      document.getElementById('transferCurrentPlacement').value = `${dept ? tDept(dept) : ''}, ${txt.ward} ${p.room}, ${txt.bed} ${p.bed}`;
       document.getElementById('transferReason').value = '';
 
       // Наполняем селект отделений
       const deptSelect = document.getElementById('transferDept');
       deptSelect.innerHTML = data.departments.map(d =>
-        `<option value="${d.id}" ${d.id === p.departmentId ? 'selected' : ''}>${d.name}</option>`
+        `<option value="${d.id}" ${d.id === p.departmentId ? 'selected' : ''}>${tDept(d)}</option>`
       ).join('');
 
       onTransferDeptChange(p.departmentId);
@@ -2856,7 +4381,7 @@
       for (let r = dept.roomStart; r <= dept.roomEnd; r++) {
         const opt = document.createElement('option');
         opt.value = r;
-        opt.textContent = `Палата ${r}`;
+        opt.textContent = `${currentLang === 'uz' ? 'Palata' : currentLang === 'en' ? 'Ward' : 'Палата'} ${r}`;
         roomSelect.appendChild(opt);
       }
 
@@ -2871,7 +4396,7 @@
       const reason = document.getElementById('transferReason').value.trim();
 
       if (!reason) {
-        alert('Пожалуйста, укажите медицинское обоснование или причину перевода');
+        alert(t('alert_fill_reason'));
         return;
       }
 
@@ -2881,7 +4406,7 @@
       // Проверка на занятость целевой койки
       const occupant = getBedOccupant(targetDeptId, targetRoom, targetBed);
       if (occupant && occupant.id !== patientId) {
-        alert(`Выбранная койка ${targetBed} в палате ${targetRoom} уже занята пациентом: ${occupant.name}`);
+        alert(`${t('alert_bed_occupied')}: ${occupant.name}`);
         return;
       }
 
@@ -2891,7 +4416,7 @@
 
       // Если ничего не изменилось
       if (oldDeptId === targetDeptId && oldRoom === targetRoom && oldBed === targetBed) {
-        alert('Целевое размещение совпадает с текущим');
+        alert(t('alert_placement_same'));
         return;
       }
 
@@ -2932,7 +4457,7 @@
       renderActiveDepartment();
       
       setTimeout(() => {
-        alert(`Пациент успешно переведен в отделение «${targetDept.name}»`);
+        alert(`${t('alert_transfer_success')} -> ${tDept(targetDept)}`);
       }, 100);
     }
 
@@ -3121,13 +4646,13 @@
         const load = capacity > 0 ? Math.round((occupied / capacity) * 100) : 0;
         const bookings = data.bookings.filter(b => b.departmentId === d.id).length;
 
-        labels.push(d.name);
+        labels.push(tDept(d));
         occupiedData.push(occupied);
         freeData.push(free);
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${d.name}</strong></td>
+          <td><strong>${tDept(d)}</strong></td>
           <td>${capacity}</td>
           <td>${occupied}</td>
           <td>${free}</td>
@@ -3150,13 +4675,13 @@
           labels: labels,
           datasets: [
             {
-              label: 'Занято коек',
+              label: t('chart_beds_occupied'),
               data: occupiedData,
               backgroundColor: data.departments.map(d => d.color),
               borderWidth: 1
             },
             {
-              label: 'Свободно коек',
+              label: t('chart_beds_free'),
               data: freeData,
               backgroundColor: '#e5e7eb',
               borderWidth: 1
@@ -3188,7 +4713,7 @@
       data.departments.forEach(d => {
         d.doctors.forEach(doc => {
           const count = activePatients.filter(p => p.departmentId === d.id && p.doctor === doc).length;
-          docLabels.push(`${doc} (${d.name})`);
+          docLabels.push(`${doc} (${tDept(d)})`);
           docPatientCounts.push(count);
           docColors.push(d.color);
         });
@@ -3200,7 +4725,7 @@
         data: {
           labels: docLabels,
           datasets: [{
-            label: 'Пациентов у врача',
+            label: t('chart_patients_per_doctor'),
             data: docPatientCounts,
             backgroundColor: docColors,
             borderWidth: 1
@@ -3856,6 +5381,240 @@
       };
       reader.readAsText(file);
     }
+
+    // ================= ОТЗЫВЫ И ОБРАТНАЯ СВЯЗЬ: ЛОГИКА =================
+
+
+    function showWidgetToast(message, type = 'success') {
+      const toast = document.getElementById('widget-toast');
+      const icon = toast.querySelector('.toast-icon');
+      const text = document.getElementById('widget-toast-msg');
+
+      toast.className = 'feedback-toast active';
+      icon.className = 'toast-icon fa-solid';
+
+      if (type === 'success') {
+        toast.classList.add('success');
+        icon.classList.add('fa-circle-check');
+        icon.style.color = 'var(--success)';
+      } else {
+        toast.classList.add('error');
+        icon.classList.add('fa-circle-xmark');
+        icon.style.color = '#ef4444';
+      }
+
+      text.textContent = message;
+
+      setTimeout(() => {
+        toast.classList.remove('active');
+      }, 4000);
+    }
+
+    // Предустановленные учетные данные Telegram по умолчанию
+    const DEFAULT_BOT_TOKEN = "8693549604:AAH6E5IHZizesmooSjGOBbVJe6I6w4RxQOE";
+    const DEFAULT_CHAT_ID = "153035392";
+
+    function initWidgetSettings() {
+      const token = localStorage.getItem('clinic_bot_token') || DEFAULT_BOT_TOKEN;
+      const chatId = localStorage.getItem('clinic_chat_id') || DEFAULT_CHAT_ID;
+      const warning = document.getElementById('widget-warning-alert');
+
+      if (token && chatId) {
+        document.getElementById('widget-bot-token').value = token;
+        document.getElementById('widget-chat-id').value = chatId;
+        warning.classList.add('hidden');
+      } else {
+        warning.classList.remove('hidden');
+      }
+    }
+
+    function saveWidgetSettings() {
+      const token = document.getElementById('widget-bot-token').value.trim();
+      const chatId = document.getElementById('widget-chat-id').value.trim();
+
+      if (!token || !chatId) {
+        showWidgetToast(t('alert_feedback_fill_settings'), 'error');
+        return;
+      }
+
+      localStorage.setItem('clinic_bot_token', token);
+      localStorage.setItem('clinic_chat_id', chatId);
+
+      initWidgetSettings();
+      closeModal('modalFeedbackSettings');
+      showWidgetToast(t('alert_feedback_settings_saved'), 'success');
+    }
+
+    async function testWidgetConnection() {
+      const token = document.getElementById('widget-bot-token').value.trim();
+      const chatId = document.getElementById('widget-chat-id').value.trim();
+
+      if (!token || !chatId) {
+        showWidgetToast(t('alert_feedback_fill_settings'), 'error');
+        return;
+      }
+
+      const testBtn = document.getElementById('widget-test-btn');
+      const originalText = testBtn.textContent;
+      testBtn.disabled = true;
+      testBtn.textContent = t('feedback_testing_btn_label');
+
+      const textMessage = `👋 <b>Приветствуем!</b>\n\nТестовое сообщение из Медицинской Системы.\nИнтеграция отзывов успешно настроена! 🚀`;
+
+      try {
+        const url = `https://api.telegram.org/bot${token}/sendMessage`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: textMessage,
+            parse_mode: 'HTML'
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          showWidgetToast(t('alert_feedback_test_success'), 'success');
+        } else {
+          showWidgetToast(t('alert_feedback_test_error') + (data.description || t('alert_feedback_invalid_token')), 'error');
+        }
+      } catch (err) {
+        showWidgetToast(t('alert_feedback_network_error'), 'error');
+      } finally {
+        testBtn.disabled = false;
+        testBtn.textContent = originalText;
+      }
+    }
+
+    // Регистрация звезд обратной связи
+    document.querySelectorAll('.feedback-star-rating input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const textDisplay = document.getElementById('widget-rating-text');
+        textDisplay.textContent = t('feedback_rating_text_' + val);
+        textDisplay.style.color = 'var(--warning)';
+      });
+    });
+
+    // Обработка отправки формы
+    document.getElementById('widget-feedback-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const token = localStorage.getItem('clinic_bot_token') || DEFAULT_BOT_TOKEN;
+      const chatId = localStorage.getItem('clinic_chat_id') || DEFAULT_CHAT_ID;
+
+      if (!token || !chatId) {
+        showWidgetToast(t('alert_feedback_fill_settings'), 'error');
+        openModal('modalFeedbackSettings');
+        return;
+      }
+
+      const name = document.getElementById('widget-user-name').value.trim();
+      const message = document.getElementById('widget-user-message').value.trim();
+      const category = document.querySelector('input[name="widget-category"]:checked').value;
+      const ratingInput = document.querySelector('input[name="widget-rating"]:checked');
+
+      if (!ratingInput) {
+        showWidgetToast(t('alert_feedback_stars'), 'error');
+        return;
+      }
+
+      const rating = ratingInput.value;
+      const submitBtn = document.getElementById('widget-submit-btn');
+      const originalText = submitBtn.innerHTML;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('feedback_sending');
+
+      const starsEmoji = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+      
+      let categoryEmoji = '💡';
+      if (category === 'Ошибка') categoryEmoji = '🐛';
+      if (category === 'Вопрос') categoryEmoji = '❓';
+      if (category === 'Благодарность') categoryEmoji = '💖';
+
+      const dateLocale = currentLang === 'uz' ? 'uz-UZ' : (currentLang === 'en' ? 'en-US' : 'ru-RU');
+      const dateStr = new Date().toLocaleString(dateLocale, { timeZone: 'Asia/Tashkent' });
+
+      let translatedCategory = category;
+      if (category === 'Предложение') translatedCategory = t('feedback_type_suggestion');
+      else if (category === 'Ошибка') translatedCategory = t('feedback_type_bug');
+      else if (category === 'Вопрос') translatedCategory = t('feedback_type_question');
+      else if (category === 'Благодарность') translatedCategory = t('feedback_type_thanks');
+
+      const telegramMsg = `📥 <b>${t('feedback_widget_title')}</b>\n\n` +
+        `👤 <b>${t('feedback_name_label').replace('*','').trim()}:</b> ${name}\n` +
+        `${categoryEmoji} <b>${t('feedback_type_label')}:</b> ${translatedCategory}\n` +
+        `⭐ <b>${t('feedback_rating_select').replace('для оценки','').trim()}:</b> ${starsEmoji} (${rating}/5)\n\n` +
+        `💬 <b>${t('feedback_text_label').replace('*','').trim()}:</b>\n` +
+        `<i>"${message}"</i>\n\n` +
+        `📅 <i>Time: ${dateStr}</i>`;
+
+      try {
+        const url = `https://api.telegram.org/bot${token}/sendMessage`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: telegramMsg,
+            parse_mode: 'HTML'
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          localStorage.setItem('clinic_feedback_user_name', name);
+          document.getElementById('widget-feedback-form').classList.add('hidden');
+          document.getElementById('feedback-success-container').classList.remove('hidden');
+          showWidgetToast(t('alert_feedback_success'), 'success');
+        } else {
+          showWidgetToast(t('alert_feedback_test_error') + (data.description || t('alert_feedback_invalid_token')), 'error');
+        }
+      } catch (err) {
+        showWidgetToast(t('alert_feedback_network_error'), 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+
+    function resetFeedbackForm() {
+      document.getElementById('widget-feedback-form').reset();
+      document.querySelectorAll('.feedback-star-rating input').forEach(input => input.checked = false);
+      document.getElementById('widget-rating-text').textContent = t('feedback_rating_select');
+      document.getElementById('widget-rating-text').style.color = 'var(--text-secondary)';
+      
+      // Load saved feedback name after reset
+      const savedFeedbackName = localStorage.getItem('clinic_feedback_user_name');
+      if (savedFeedbackName) {
+        const nameInput = document.getElementById('widget-user-name');
+        if (nameInput) nameInput.value = savedFeedbackName;
+      }
+      
+      document.getElementById('feedback-success-container').classList.add('hidden');
+      document.getElementById('widget-feedback-form').classList.remove('hidden');
+    }
+
+    function toggleFeedbackWidget() {
+      const widget = document.getElementById('feedbackWidget');
+      const btn = document.getElementById('feedbackToggleBtn');
+      const isVisible = widget.classList.toggle('active');
+      
+      if (isVisible) {
+        btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+        btn.style.background = 'var(--primary)';
+        btn.style.color = 'white';
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-comment-dots"></i>';
+        btn.style.background = 'var(--gradient-card)';
+        btn.style.color = 'var(--primary)';
+      }
+    }
+
+    // Запуск инициализации при загрузке
+    initWidgetSettings();
   </script>
 </body>
 </html>
